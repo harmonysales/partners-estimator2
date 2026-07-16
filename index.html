@@ -593,24 +593,28 @@ function renderResultTable(r) {
   if (!el) return;
   el.innerHTML = `
     <table class="ct">
-      <thead><tr><th class="thm">구분</th><th>신용제한 고객 (할부)</th><th>렌트</th></tr></thead>
+      <thead><tr><th class="thm">구분</th><th>48개월</th><th>60개월</th></tr></thead>
       <tbody>
-        <tr class="sec"><td colspan="3">48개월</td></tr>
-        <tr><td class="sb">초기비용</td><td class="vr">${W(l.initialInstall48)}</td><td class="vr">${W(l.deposit48)}</td></tr>
-        <tr><td class="sb">월부금 / 월렌트료</td><td class="vr">${W(l.monthlyInstall48)}</td><td class="vr">${W(l.rentMonthly48)}</td></tr>
-        <tr><td class="sb">보험료 (4년)</td><td class="vr">${W(l.insurance48)}</td><td class="vr" style="font-size:11px;color:var(--muted)">렌트료 포함</td></tr>
-        <tr><td class="sb">자동차세 (4년)</td><td class="vr">${W(l.carTax48)}</td><td class="vr" style="font-size:11px;color:var(--muted)">렌트료 포함</td></tr>
-        <tr><td class="sb">만기인수금</td><td class="vr" style="font-size:11px;color:var(--muted)">해당없음</td><td class="vr">${W(l.residual48)} <span style="font-size:10px">(보증금 상계)</span></td></tr>
-        <tr class="red"><td class="lb">4년 총 투입비</td><td class="vr">${W(l.totalInstall48)}</td><td class="vr">${W(l.totalRent48)}</td></tr>
-        <tr><td class="sb">월 평균비용</td><td class="vr">${W(l.avgInstall48)}</td><td class="vr">${W(l.avgRent48)}</td></tr>
-        <tr class="sec"><td colspan="3">60개월</td></tr>
-        <tr><td class="sb">초기비용</td><td class="vr">${W(l.initialInstall60)}</td><td class="vr">${W(l.deposit60)}</td></tr>
-        <tr><td class="sb">월부금 / 월렌트료</td><td class="vr">${W(l.monthlyInstall60)}</td><td class="vr">${W(l.rentMonthly60)}</td></tr>
-        <tr><td class="sb">보험료 (5년)</td><td class="vr">${W(l.insurance60)}</td><td class="vr" style="font-size:11px;color:var(--muted)">렌트료 포함</td></tr>
-        <tr><td class="sb">자동차세 (5년)</td><td class="vr">${W(l.carTax60)}</td><td class="vr" style="font-size:11px;color:var(--muted)">렌트료 포함</td></tr>
-        <tr><td class="sb">만기인수금</td><td class="vr" style="font-size:11px;color:var(--muted)">해당없음</td><td class="vr">${W(l.residual60)} <span style="font-size:10px">(보증금 상계)</span></td></tr>
-        <tr class="red"><td class="lb">5년 총 투입비</td><td class="vr">${W(l.totalInstall60)}</td><td class="vr">${W(l.totalRent60)}</td></tr>
-        <tr><td class="sb">월 평균비용</td><td class="vr">${W(l.avgInstall60)}</td><td class="vr">${W(l.avgRent60)}</td></tr>
+        <tr class="sec"><td colspan="3">상품정보</td></tr>
+        <tr><td class="sb">상품명</td><td class="vc">구입형 렌트</td><td class="vc">구입형 렌트</td></tr>
+        <tr><td class="sb">대여기간</td><td class="vc">48개월</td><td class="vc">60개월</td></tr>
+        <tr><td class="sb">만기처리</td><td class="vc">동반차</td><td class="vc">동반차</td></tr>
+        <tr class="sec"><td colspan="3">비용정보</td></tr>
+        <tr><td class="sb">차량가격</td><td class="vr">${W(l.price)}</td><td class="vr">${W(l.price)}</td></tr>
+        <tr><td class="sb">보증금 (${(inp.depositRate*100).toFixed(0)}%)</td><td class="vr">${W(l.deposit48)}</td><td class="vr">${W(l.deposit60)}</td></tr>
+        <tr><td class="sb">선수금 (${(inp.prepayRate*100).toFixed(0)}%)</td><td class="vr">${W(l.prepay48)}</td><td class="vr">${W(l.prepay60)}</td></tr>
+        <tr class="sec"><td colspan="3">월 렌트료</td></tr>
+        <tr><td class="sb">공급가액</td><td class="vr">${W(l.supplyRent48)}</td><td class="vr">${W(l.supplyRent60)}</td></tr>
+        <tr><td class="sb">부가세</td><td class="vr">${W(l.vatRent48)}</td><td class="vr">${W(l.vatRent60)}</td></tr>
+        <tr><td class="sb">월 렌트료</td><td class="vr">${W(l.rentMonthly48)}</td><td class="vr">${W(l.rentMonthly60)}</td></tr>
+        <tr><td class="sb">선수금 차감</td><td class="vr">${W(l.prepayDeduct48)}원</td><td class="vr">${W(l.prepayDeduct60)}원</td></tr>
+        <tr class="red"><td class="lb">실납입 렌트료</td><td class="vr">${W(l.finalRent48)}</td><td class="vr">${W(l.finalRent60)}</td></tr>
+        <tr class="sec"><td colspan="3">총 투입비</td></tr>
+        <tr><td class="sb">보험료</td><td class="vr">${W(l.insurance48)}</td><td class="vr">${W(l.insurance60)}</td></tr>
+        <tr><td class="sb">자동차세</td><td class="vr">${W(l.carTax48)}</td><td class="vr">${W(l.carTax60)}</td></tr>
+        <tr><td class="sb">만기인수금</td><td class="vr">${W(l.residual48)} <span style="font-size:10px">(보증금 상계)</span></td><td class="vr">${W(l.residual60)} <span style="font-size:10px">(보증금 상계)</span></td></tr>
+        <tr class="red"><td class="lb">총 투입비</td><td class="vr">${W(l.totalRent48)}</td><td class="vr">${W(l.totalRent60)}</td></tr>
+        <tr><td class="sb">월 평균비용</td><td class="vr">${W(l.avgRent48)}</td><td class="vr">${W(l.avgRent60)}</td></tr>
       </tbody>
     </table>
   `;
