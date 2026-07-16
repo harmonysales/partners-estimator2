@@ -210,7 +210,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
   </header>
   <div class="wrap">
     <div class="input-panel">
-      <div class="ip-title">[차량구입] 할부 vs 렌트/리스 비교</div>
+      <div class="ip-title">차량 및 계약 정보를 선택해주세요.</div>
       <div class="ip-grid">
         <div class="ip-block">
           <div class="ip-btitle">▢ 차량정보 (선택, 입력항목)</div>
@@ -220,13 +220,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
             <select id="s-series" onchange="onSeries()" disabled><option value="">선택</option></select></div>
           <div class="ip-row"><label>라인업</label>
             <select id="s-lineup" onchange="onLineup()" disabled><option value="">선택</option></select></div>
-          <div class="ip-row"><label>차량등록일</label>
-            <input type="text" id="i-regdate" placeholder="YYYY-MM-DD" maxlength="10" oninput="fmtDate(this)"/></div>
-          <div class="ip-row"><label>주행거리</label>
-            <input type="text" id="i-mileage" placeholder="km" oninput="fmtNum(this)"/></div>
-          <div class="ip-row"><label>차량가격</label>
-            <input type="text" id="i-price" placeholder="원" oninput="fmtNum(this)"/></div>
-        </div>
+          
         <div class="ip-block">
           <div class="ip-btitle">▢ 차량 세부정보</div>
           <div class="ip-row"><label>차종</label><div class="disp empty" id="d-type">-</div></div>
@@ -248,7 +242,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
             </div>
           </div>
           <div class="ip-row" style="align-items:flex-start;margin-top:8px;">
-            <label style="padding-top:2px;">선수금율</label>
+            <label style="padding-top:2px;">선납금율</label>
             <div class="sl-wrap">
               <div class="sl-top">
                 <span style="font-size:10px;color:var(--muted);">0% ~ 50%</span>
@@ -303,20 +297,20 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
         <div class="summary-grid">
           <div class="summary-col">
             <div class="summary-period">48개월 계약 시</div>
-            <div class="summary-row"><span>지금 내는 돈</span><strong id="sum-init48">-</strong></div>
+            <div class="summary-row"><span>초기비용 (보증금+선납금)</span><strong id="sum-init48">-</strong></div>
             <div class="summary-row"><span>매달 내는 돈</span><strong id="sum-monthly48">-</strong></div>
             <div class="summary-row"><span>만기 시 인수하려면</span><strong id="sum-res48">-</strong></div>
-            <div style="font-size:11px;opacity:.8;text-align:right;margin-top:2px;">(만기인수가는 보증금과 상계처리됩니다.)</div>
+            <div style="font-size:11px;opacity:.8;text-align:right;margin-top:2px;"></div>
           </div>
           <div class="summary-col">
             <div class="summary-period">60개월 계약 시</div>
-            <div class="summary-row"><span>지금 내는 돈</span><strong id="sum-init60">-</strong></div>
+            <div class="summary-row"><span>초기비용 (보증금+선납금)</span><strong id="sum-init60">-</strong></div>
             <div class="summary-row"><span>매달 내는 돈</span><strong id="sum-monthly60">-</strong></div>
             <div class="summary-row"><span>만기 시 인수하려면</span><strong id="sum-res60">-</strong></div>
-            <div style="font-size:11px;opacity:.8;text-align:right;margin-top:2px;">(만기인수가는 보증금과 상계처리됩니다.)</div>
+            <div style="font-size:11px;opacity:.8;text-align:right;margin-top:2px;"></div>
           </div>
         </div>
-        <div class="summary-note">※ "지금 내는 돈"은 보증금+선수금 합계입니다. 보험은 별도이므로, 해당 견적에는 보험료가 따로 포함되지 않습니다.</div>
+        <div class="summary-note"></div>
       </div>
       <div class="cmp-outer">
         <div class="cmp-header">【하모니】 구입형 렌트 견적</div>
@@ -596,25 +590,21 @@ function renderResultTable(r) {
       <thead><tr><th class="thm">구분</th><th>48개월</th><th>60개월</th></tr></thead>
       <tbody>
         <tr class="sec"><td colspan="3">상품정보</td></tr>
-        <tr><td class="sb">상품명</td><td class="vc">구입형 렌트</td><td class="vc">구입형 렌트</td></tr>
+        <tr><td class="sb">상품명</td><td class="vc" colspan="2" style="text-align:center">구입형 렌트</td></tr>
         <tr><td class="sb">대여기간</td><td class="vc">48개월</td><td class="vc">60개월</td></tr>
-        <tr><td class="sb">만기처리</td><td class="vc">인수형</td><td class="vc">인수형</td></tr>
+        <tr><td class="sb">만기처리</td><td class="vc" colspan="2" style="text-align:center">인수형</td></tr>
         <tr class="sec"><td colspan="3">비용정보</td></tr>
         <tr><td class="sb">차량가격</td><td class="vr">${W(l.price)}</td><td class="vr">${W(l.price)}</td></tr>
         <tr><td class="sb">보증금 (${(inp.depositRate*100).toFixed(0)}%)</td><td class="vr">${W(l.deposit48)}</td><td class="vr">${W(l.deposit60)}</td></tr>
-        <tr><td class="sb">선수금 (${(inp.prepayRate*100).toFixed(0)}%)</td><td class="vr">${W(l.prepay48)}</td><td class="vr">${W(l.prepay60)}</td></tr>
+        <tr><td class="sb">선납금 (${(inp.prepayRate*100).toFixed(0)}%)</td><td class="vr">${W(l.prepay48)}</td><td class="vr">${W(l.prepay60)}</td></tr>
         <tr class="sec"><td colspan="3">월 렌트료</td></tr>
         <tr><td class="sb">공급가액</td><td class="vr">${W(l.supplyRent48)}</td><td class="vr">${W(l.supplyRent60)}</td></tr>
         <tr><td class="sb">부가세</td><td class="vr">${W(l.vatRent48)}</td><td class="vr">${W(l.vatRent60)}</td></tr>
         <tr><td class="sb">월 렌트료</td><td class="vr">${W(l.rentMonthly48)}</td><td class="vr">${W(l.rentMonthly60)}</td></tr>
-        <tr><td class="sb">선수금 차감</td><td class="vr">${W(l.prepayDeduct48)}원</td><td class="vr">${W(l.prepayDeduct60)}원</td></tr>
+        <tr><td class="sb">선납금 차감</td><td class="vr">${W(l.prepayDeduct48)}원</td><td class="vr">${W(l.prepayDeduct60)}원</td></tr>
         <tr class="red"><td class="lb">실납입 렌트료</td><td class="vr">${W(l.finalRent48)}</td><td class="vr">${W(l.finalRent60)}</td></tr>
-        <tr class="sec"><td colspan="3">총 투입비</td></tr>
-        <tr><td class="sb">보험료</td><td class="vr">${W(l.insurance48)}</td><td class="vr">${W(l.insurance60)}</td></tr>
-        <tr><td class="sb">자동차세</td><td class="vr">${W(l.carTax48)}</td><td class="vr">${W(l.carTax60)}</td></tr>
-        <tr><td class="sb">만기인수금</td><td class="vr">${W(l.residual48)} <span style="font-size:10px">(보증금 상계)</span></td><td class="vr">${W(l.residual60)} <span style="font-size:10px">(보증금 상계)</span></td></tr>
-        <tr class="red"><td class="lb">총 투입비</td><td class="vr">${W(l.totalRent48)}</td><td class="vr">${W(l.totalRent60)}</td></tr>
-        <tr><td class="sb">월 평균비용</td><td class="vr">${W(l.avgRent48)}</td><td class="vr">${W(l.avgRent60)}</td></tr>
+        <tr class="sec"><td colspan="3">만기 시</td></tr>
+        <tr><td class="sb">만기인수금</td><td class="vr">${W(l.residual48)}</td><td class="vr">${W(l.residual60)}</td></tr>
       </tbody>
     </table>
   `;
@@ -655,7 +645,7 @@ function renderQuote() {
         <div class="qv-row"><span class="qv-key">차종</span><span class="qv-val">${v.차종}</span></div>
         <div class="qv-row"><span class="qv-key">유종</span><span class="qv-val">${v.연료타입}</span></div>
         <div class="qv-row"><span class="qv-key">배기량</span><span class="qv-val">${v.배기량?v.배기량.toLocaleString()+" cc":"-"}</span></div>
-        <div class="qv-row"><span class="qv-key">적재량</span><span class="qv-val">${v.적재량} kg</span></div>
+        <div class="qv-row"><span class="qv-key">적재량</span><span class="qv-val">${v.적재량 ? v.적재량.toLocaleString()+" kg" : "-"}</span></div>
         <div class="qv-row"><span class="qv-key">인승</span><span class="qv-val">${v.인승}인승</span></div>
 
       </div>
@@ -667,17 +657,17 @@ function renderQuote() {
         <tr><td class="ql">상품명</td><td>구입형 렌트</td><td>구입형 렌트</td></tr>
         <tr><td class="ql">대여기간</td><td>48개월</td><td>60개월</td></tr>
         <tr><td class="ql">만기처리</td><td>인수형</td><td>인수형</td></tr>
-        <tr><td class="ql">정비상품</td><td>자가정비</td><td>자가정비</td></tr>
+        <tr><td class="ql">정비상품</td><td colspan="2" style="text-align:center">자가정비</td></tr>
         <tr><td class="ql">운전자나이</td><td colspan="2">만 26세 이상</td></tr>
-        <tr class="qins"><td class="ql">보험담보조건 및 면책금</td><td colspan="2">${(v.브랜드명==="BMW"||v.브랜드명==="벤츠")?"임직원보험 가입, 대인 무제한, 대물 1억, 자기신체사고 1억, 차량손해면책금 30~100만원, 무보험차상해 미가입, 차대차 100만원, 단독사고 200만원":"임직원보험 가입, 대인 무제한, 대물 1억, 자기신체사고 1억, 차량손해면책금 30~100만원, 무보험차상해 미가입"}<br>※ 차종 및 조건에 따라 보험요건이 달라질 수 있습니다.</td></tr>
+        <tr class="qins"><td class="ql">보험담보조건 및 면책금</td><td colspan="2">${(v.브랜드명==="BMW"||v.브랜드명==="벤츠")?"임직원보험 가입<br>대인 무제한, 대물 1억, 자기신체사고 1억<br>차량손해면책금 30~100만원<br>무보험차상해 미가입<br>차대차 100만원, 단독사고 200만원":"임직원보험 가입<br>대인 무제한, 대물 1억, 자기신체사고 1억<br>차량손해면책금 30~100만원<br>무보험차상해 미가입"}<br><span style="font-size:10px">※ 차종 및 조건에 따라 보험요건이 달라질 수 있습니다.</span></td></tr>
         <tr class="qsub"><td class="ql">약정거리</td><td colspan="2">${parseInt((document.getElementById("i-mileage")._raw||document.getElementById("i-mileage").value).replace(/,/g,""))||0 ? (parseInt((document.getElementById("i-mileage")._raw||document.getElementById("i-mileage").value).replace(/,/g,""))||0).toLocaleString()+"km / 년" : "-"}</td></tr>
         <tr class="qsub"><td class="ql">보증금 (${(inp.depositRate*100).toFixed(0)}%)</td><td>${W(l.deposit48)}</td><td>${W(l.deposit60)}</td></tr>
-        <tr class="qsub"><td class="ql">선수금 (${(inp.prepayRate*100).toFixed(0)}%)</td><td>${W(l.prepay48)}</td><td>${W(l.prepay60)}</td></tr>
+        <tr class="qsub"><td class="ql">선납금 (${(inp.prepayRate*100).toFixed(0)}%)</td><td>${W(l.prepay48)}</td><td>${W(l.prepay60)}</td></tr>
         <tr class="qsub"><td class="ql">만기인수가<br><span style="font-size:10px;color:#888;">(보증금 상계처리)</span></td><td>${W(l.deposit48)}</td><td>${W(l.deposit60)}</td></tr>
         <tr><td class="ql">공급가액</td><td>${W(l.supplyRent48)}</td><td>${W(l.supplyRent60)}</td></tr>
         <tr><td class="ql">부가세</td><td>${W(l.vatRent48)}</td><td>${W(l.vatRent60)}</td></tr>
         <tr><td class="ql">월 대여료</td><td>${W(l.rentMonthly48)}</td><td>${W(l.rentMonthly60)}</td></tr>
-        <tr><td class="ql">선수금 차감</td><td>${N(l.prepayDeduct48)}원</td><td>${N(l.prepayDeduct60)}원</td></tr>
+        <tr><td class="ql">선납금 차감</td><td>${N(l.prepayDeduct48)}원</td><td>${N(l.prepayDeduct60)}원</td></tr>
         <tr class="qhl"><td class="ql">실납입 대여료</td><td>${W(l.finalRent48)}</td><td>${W(l.finalRent60)}</td></tr>
       </tbody>
     </table>
@@ -820,7 +810,7 @@ function renderProfit(r) {
         <table class="pft">
           <tr><td class="pfl">차량</td><td class="pfv" colspan="2">${v.브랜드명} ${v.시리즈명} ${v.라인업명}</td></tr>
           <tr><td class="pfl">차량가격</td><td class="pfv" colspan="2">${W(r.input.carPrice)}</td></tr>
-          <tr><td class="pfl">보증금율 / 선수금율</td><td class="pfv" colspan="2">${(r.input.depositRate*100).toFixed(0)}% / ${(r.input.prepayRate*100).toFixed(0)}%</td></tr>
+          <tr><td class="pfl">보증금율 / 선납금율</td><td class="pfv" colspan="2">${(r.input.depositRate*100).toFixed(0)}% / ${(r.input.prepayRate*100).toFixed(0)}%</td></tr>
           <tr><td class="pfl">이자수익 금리</td><td class="pfv" colspan="2">${(r.input.interestRate*100).toFixed(1)}%</td></tr>
           <tr><td class="pfl">수수료</td><td class="pfv" colspan="2">${W(r.input.feeAmount)}</td></tr>
           <tr><td class="pfl">조달기준 비율</td><td class="pfv" colspan="2">${(r.input.fundRatio*100).toFixed(0)}%</td></tr>
@@ -844,13 +834,13 @@ function renderProfit(r) {
             <tr><td class="pfl">추가P 월</td><td class="pfv">+${W(c.extraPMonthly48)}</td><td class="pfv">+${W(c.extraPMonthly60)}</td></tr>
             <tr><td class="pfl">올림분</td><td class="pfv">+${W(c.roundingRaw48)}</td><td class="pfv">+${W(c.roundingRaw60)}</td></tr>
             <tr><td class="pfl">월 대여료</td><td class="pfv">${W(c.monthlyLease48)}</td><td class="pfv">${W(c.monthlyLease60)}</td></tr>
-            <tr><td class="pfl">선수금 차감</td><td class="pfv">${W(c.finalRent48 - c.monthlyLease48)}</td><td class="pfv">${W(c.finalRent60 - c.monthlyLease60)}</td></tr>
+            <tr><td class="pfl">선납금 차감</td><td class="pfv">${W(c.finalRent48 - c.monthlyLease48)}</td><td class="pfv">${W(c.finalRent60 - c.monthlyLease60)}</td></tr>
             <tr class="pf2hl"><td class="pfl">실납입 대여료</td><td class="pfv">${W(c.finalRent48)}</td><td class="pfv">${W(c.finalRent60)}</td></tr>
             <tr><td class="pfl">공급가액 / 부가세</td><td class="pfv">${W(Math.round(c.monthlyLease48/1.1))} / ${W(c.monthlyLease48-Math.round(c.monthlyLease48/1.1))}</td><td class="pfv">${W(Math.round(c.monthlyLease60/1.1))} / ${W(c.monthlyLease60-Math.round(c.monthlyLease60/1.1))}</td></tr>
 
             <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
             <tr><td class="pfl">렌트료 수익 <span style="font-size:11px">(실납입 ÷ 1.1 × 기간)</span></td><td class="pfv">${W(c.rentRevenue48)}</td><td class="pfv">${W(c.rentRevenue60)}</td></tr>
-            <tr><td class="pfl">선수금 <span style="font-size:11px">(선수금 ÷ 1.1)</span></td><td class="pfv">${W(c.prepaySupply48)}</td><td class="pfv">${W(c.prepaySupply60)}</td></tr>
+            <tr><td class="pfl">선납금 <span style="font-size:11px">(선납금 ÷ 1.1)</span></td><td class="pfv">${W(c.prepaySupply48)}</td><td class="pfv">${W(c.prepaySupply60)}</td></tr>
             <tr><td class="pfl">잔존매각 <span style="font-size:11px">(보증금 ÷ 1.1)</span></td><td class="pfv">${W(c.residualSale48)}</td><td class="pfv">${W(c.residualSale60)}</td></tr>
             <tr class="pf2hl"><td class="pfl">총 수익 계</td><td class="pfv">${W(c.totalRevenue48)}</td><td class="pfv">${W(c.totalRevenue60)}</td></tr>
 
