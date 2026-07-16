@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>하모니렌트카 파트너즈 견적기</title>
+<title>하모니렌트카 구입형 렌트 견적기 (본사용)</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
 :root {
@@ -191,8 +191,8 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
 <div id="login-screen">
   <div class="lbox">
     <div class="logo">HARMONY RENTCAR</div>
-    <h1>파트너즈 견적기</h1>
-    <p>인가된 파트너만 접근할 수 있습니다</p>
+    <h1>구입형 렌트 견적기 (본사용)</h1>
+    <p>본 견적기는 본사용으로, 외부 공유 불가합니다.</p>
     <input type="text" id="uid" placeholder="아이디 입력" style="margin-bottom:8px;"/>
     <input type="password" id="pw" placeholder="비밀번호 입력"/>
     <button onclick="doLogin()">로그인</button>
@@ -204,7 +204,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
     <div class="h-left">
       <div class="h-logo">HARMONY<br>RENTCAR</div>
       <div class="h-div"></div>
-      <div class="h-title">파트너즈 견적기 · 구입형 리스 <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:6px;">ver.2026.07.08</span></div>
+      <div class="h-title">구입형 렌트 견적기 (본사용) · 구입형 리스 <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:6px;">ver.2026.07.08</span></div>
     </div>
     <button class="h-out" onclick="doLogout()">로그아웃</button>
   </header>
@@ -242,7 +242,9 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
           <div class="ip-row">
             <label>보증금율</label>
             <div class="rbg">
-              <button class="rbtn on" style="pointer-events:none">10%</button>
+              <button class="rbtn on" onclick="setDep(10,this)">10%</button>
+              <button class="rbtn" onclick="setDep(15,this)">15%</button>
+              <button class="rbtn" onclick="setDep(20,this)">20%</button>
             </div>
           </div>
           <div class="ip-row" style="align-items:flex-start;margin-top:8px;">
@@ -250,9 +252,9 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
             <div class="sl-wrap">
               <div class="sl-top">
                 <span style="font-size:10px;color:var(--muted);">0% ~ 50%</span>
-                <span class="sl-val"><span id="pv">10</span>%</span>
+                <span class="sl-val"><span id="pv">0</span>%</span>
               </div>
-              <input type="range" id="ps" min="0" max="50" step="5" value="10"
+              <input type="range" id="ps" min="0" max="50" step="5" value="0"
                 oninput="document.getElementById('pv').textContent=this.value"/>
               <div class="sl-labels"><span>0%</span><span>25%</span><span>50%</span></div>
             </div>
@@ -494,7 +496,7 @@ async function doCalc() {
   try {
     const body = {
       token,
-      brandCode: selV.브랜드코드, seriesCode: selV.시리즈코드,
+      brandCode: selV.브랜드코드, seriesCode: selV.시리즈코드, seriesName: selV.시리즈명,
       modelCode: null, lineupCode: selV.라인업코드,
       price, depositRate: depRate/100, prepayRate: preRate, extraPRate,
       regdate: document.getElementById("i-regdate").value,
