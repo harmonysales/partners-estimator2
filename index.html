@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>하모니렌트카 구입형 렌트 견적기 (본사용) (본사용)</title>
+<title>하모니렌트카 구입형 렌트 견적기 (본사용)</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
 :root {
@@ -191,7 +191,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
 <div id="login-screen">
   <div class="lbox">
     <div class="logo">HARMONY RENTCAR</div>
-    <h1>구입형 렌트 견적기 (본사용) (본사용)</h1>
+    <h1>구입형 렌트 견적기 (본사용)</h1>
     <p>본 견적기는 본사용으로, 외부 공유 불가합니다.</p>
     <input type="text" id="uid" placeholder="아이디 입력" style="margin-bottom:8px;"/>
     <input type="password" id="pw" placeholder="비밀번호 입력"/>
@@ -204,7 +204,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
     <div class="h-left">
       <div class="h-logo">HARMONY<br>RENTCAR</div>
       <div class="h-div"></div>
-      <div class="h-title">구입형 렌트 견적기 (본사용) (본사용) · 구입형 리스</div>
+      <div class="h-title">구입형 렌트 견적기 (본사용) · 구입형 리스</div>
     </div>
     <button class="h-out" onclick="doLogout()">로그아웃</button>
   </header>
@@ -765,7 +765,7 @@ async function submitProfitInput() {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({
         adminToken,
-        brandCode: selV.브랜드코드, seriesCode: selV.시리즈코드,
+        brandCode: selV.브랜드코드, seriesCode: selV.시리즈코드, seriesName: selV.시리즈명,
         modelCode: null, lineupCode: selV.라인업코드,
         price, depositRate: depRate/100,
         prepayRate: parseInt(document.getElementById("ps").value) / 100,
