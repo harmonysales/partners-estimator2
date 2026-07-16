@@ -553,7 +553,7 @@ async function doCalc() {
       brandCode: selV.브랜드코드, seriesCode: selV.시리즈코드, seriesName: selV.시리즈명,
       modelCode: null, lineupCode: selV.라인업코드,
       price, depositRate: depRate/100, prepayRate: preRate, extraPRate,
-      regdate: document.getElementById("i-regdate").value,
+      regdate: null,
       mileage: (document.getElementById("i-mileage")._raw || document.getElementById("i-mileage").value).replace(/,/g,"")
     };
     if (adminVars) Object.assign(body, adminVars);
@@ -768,7 +768,7 @@ async function submitProfitInput() {
         price, depositRate: depRate/100,
         prepayRate: parseInt(document.getElementById("ps").value) / 100,
         extraPRate: parseInt(document.getElementById("eps").value) / 100,
-        regdate: document.getElementById("i-regdate").value || null,
+        regdate: null,
         insurance: insuranceInput || 0,
         salePrice48: salePriceInput48 || 0,
         salePrice60: salePriceInput60 || 0,
