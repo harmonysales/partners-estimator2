@@ -204,7 +204,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
     <div class="h-left">
       <div class="h-logo">HARMONY<br>RENTCAR</div>
       <div class="h-div"></div>
-      <div class="h-title">구입형 렌트 견적기 (본사용)</div>
+      <div class="h-title">구입형 렌트 견적기 (본사용) <span style="font-size:11px;color:#aaa;font-weight:400">ver.2026.07.16</span></div>
     </div>
     <button class="h-out" onclick="doLogout()">로그아웃</button>
   </header>
@@ -663,7 +663,9 @@ function renderQuote() {
         <tr><td class="ql">만기처리</td><td>인수형</td><td>인수형</td></tr>
         <tr><td class="ql">정비상품</td><td>자가정비</td><td>자가정비</td></tr>
         <tr><td class="ql">운전자나이</td><td colspan="2">만 26세 이상</td></tr>
-        <tr class="qins"><td class="ql">보험담보조건 및 면책금</td><td colspan="2">${(v.브랜드명==="BMW"||v.브랜드명==="벤츠")?"임직원보험 가입, 대인 무제한, 대물 1억, 자기신체사고 1억, 차량손해면책금 30~100만원, 무보험차상해 미가입, 차대차 100만원, 단독사고 200만원":"임직원보험 가입, 대인 무제한, 대물 1억, 자기신체사고 1억, 차량손해면책금 30~100만원, 무보험차상해 미가입"} ※ 차종 및 조건에 따라 보험요건이 달라질 수 있습니다.</td></tr>
+        <tr class="qins"><td class="ql">보험담보조건 및 면책금</td><td colspan="2">${(v.브랜드명==="BMW"||v.브랜드명==="벤츠")?
+"임직원보험 가입<br>대인 무제한 / 대물 1억 / 자기신체사고 1억<br>차량손해면책금 30~100만원 / 무보험차상해 미가입<br>차대차 100만원 / 단독사고 200만원":
+"임직원보험 가입<br>대인 무제한 / 대물 1억 / 자기신체사고 1억<br>차량손해면책금 30~100만원 / 무보험차상해 미가입"}<br><span style="font-size:10px;color:#888">※ 차종 및 조건에 따라 보험요건이 달라질 수 있습니다.</span></td></tr>
         <tr class="qsub"><td class="ql">약정거리</td><td colspan="2">${parseInt((document.getElementById("i-mileage")._raw||document.getElementById("i-mileage").value).replace(/,/g,""))||0 ? (parseInt((document.getElementById("i-mileage")._raw||document.getElementById("i-mileage").value).replace(/,/g,""))||0).toLocaleString()+"km / 년" : "-"}</td></tr>
         <tr class="qsub"><td class="ql">보증금 (${(inp.depositRate*100).toFixed(0)}%)</td><td>${W(l.deposit48)}</td><td>${W(l.deposit60)}</td></tr>
         <tr class="qsub"><td class="ql">선납금 (${(inp.prepayRate*100).toFixed(0)}%)</td><td>${W(l.prepay48)}</td><td>${W(l.prepay60)}</td></tr>
