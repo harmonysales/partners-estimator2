@@ -220,7 +220,11 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
             <select id="s-series" onchange="onSeries()" disabled><option value="">선택</option></select></div>
           <div class="ip-row"><label>라인업</label>
             <select id="s-lineup" onchange="onLineup()" disabled><option value="">선택</option></select></div>
-          
+          <div class="ip-row"><label>주행거리</label>
+            <input type="text" id="i-mileage" placeholder="km" oninput="fmtNum(this)"/></div>
+          <div class="ip-row"><label>차량가격</label>
+            <input type="text" id="i-price" placeholder="원" oninput="fmtNum(this)"/></div>
+        </div>
         <div class="ip-block">
           <div class="ip-btitle">▢ 차량 세부정보</div>
           <div class="ip-row"><label>차종</label><div class="disp empty" id="d-type">-</div></div>
