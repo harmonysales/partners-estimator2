@@ -827,7 +827,7 @@ function renderProfit(r) {
           <thead><tr><th class="pf2h">구분</th><th class="pf2h">48개월</th><th class="pf2h">60개월</th></tr></thead>
           <tbody>
             <tr class="pf2sec"><td colspan="3">원비용 구성</td></tr>
-            <tr><td class="pfl">구입가 <span style="font-size:11px">(차량가 ÷ 1.1)</span></td><td class="pfv">${W(Math.round(r.input.carPrice/1.1))}</td><td class="pfv">${W(Math.round(r.input.carPrice/1.1))}</td></tr>
+            <tr><td class="pfl">구입가</td><td class="pfv">${W(r.input.carPriceSupply)}</td><td class="pfv">${W(r.input.carPriceSupply)}</td></tr>
             <tr><td class="pfl">취득세</td><td class="pfv">${W(c.acqTax)}</td><td class="pfv">${W(c.acqTax)}</td></tr>
             <tr><td class="pfl">채권</td><td class="pfv">${W(c.bond)}</td><td class="pfv">${W(c.bond)}</td></tr>
             <tr><td class="pfl">서비스비용</td><td class="pfv">${W(c.agency48)}</td><td class="pfv">${W(c.agency60)}</td></tr>
@@ -842,12 +842,12 @@ function renderProfit(r) {
             <tr><td class="pfl">월 대여료</td><td class="pfv">${W(c.monthlyLease48)}</td><td class="pfv">${W(c.monthlyLease60)}</td></tr>
             <tr><td class="pfl">선납금 차감</td><td class="pfv">${W(c.finalRent48 - c.monthlyLease48)}</td><td class="pfv">${W(c.finalRent60 - c.monthlyLease60)}</td></tr>
             <tr class="pf2hl"><td class="pfl">실납입 대여료</td><td class="pfv">${W(c.finalRent48)}</td><td class="pfv">${W(c.finalRent60)}</td></tr>
-            <tr><td class="pfl">공급가액 / 부가세</td><td class="pfv">${W(Math.round(c.monthlyLease48/1.1))} / ${W(c.monthlyLease48-Math.round(c.monthlyLease48/1.1))}</td><td class="pfv">${W(Math.round(c.monthlyLease60/1.1))} / ${W(c.monthlyLease60-Math.round(c.monthlyLease60/1.1))}</td></tr>
+            <tr><td class="pfl">공급가액 / 부가세</td><td class="pfv">${W(c.leaseSupply48)} / ${W(c.leaseVat48)}</td><td class="pfv">${W(c.leaseSupply60)} / ${W(c.leaseVat60)}</td></tr>
 
             <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
-            <tr><td class="pfl">렌트료 수익 <span style="font-size:11px">(실납입 ÷ 1.1 × 기간)</span></td><td class="pfv">${W(c.rentRevenue48)}</td><td class="pfv">${W(c.rentRevenue60)}</td></tr>
-            <tr><td class="pfl">선납금 <span style="font-size:11px">(선납금 ÷ 1.1)</span></td><td class="pfv">${W(c.prepaySupply48)}</td><td class="pfv">${W(c.prepaySupply60)}</td></tr>
-            <tr><td class="pfl">잔존매각 <span style="font-size:11px">(보증금 ÷ 1.1)</span></td><td class="pfv">${W(c.residualSale48)}</td><td class="pfv">${W(c.residualSale60)}</td></tr>
+            <tr><td class="pfl">렌트료 수익</td><td class="pfv">${W(c.rentRevenue48)}</td><td class="pfv">${W(c.rentRevenue60)}</td></tr>
+            <tr><td class="pfl">선납금</td><td class="pfv">${W(c.prepaySupply48)}</td><td class="pfv">${W(c.prepaySupply60)}</td></tr>
+            <tr><td class="pfl">잔존매각</td><td class="pfv">${W(c.residualSale48)}</td><td class="pfv">${W(c.residualSale60)}</td></tr>
             <tr class="pf2hl"><td class="pfl">총 수익 계</td><td class="pfv">${W(c.totalRevenue48)}</td><td class="pfv">${W(c.totalRevenue60)}</td></tr>
 
             <tr class="pf2sec"><td colspan="3">총 비용</td></tr>
@@ -860,7 +860,7 @@ function renderProfit(r) {
             <tr class="pf2hl"><td class="pfl">총 비용 계</td><td class="pfv">${W(c.totalCost48)}</td><td class="pfv">${W(c.totalCost60)}</td></tr>
 
             <tr class="pf2profit"><td class="pfl">순 이익 (총)</td><td class="pfv">${W(pf.netProfit48)}</td><td class="pfv">${W(pf.netProfit60)}</td></tr>
-            <tr class="pf2profit"><td class="pfl">순 이익 (월)</td><td class="pfv">${W(Math.round(pf.netProfit48/48))}</td><td class="pfv">${W(Math.round(pf.netProfit60/60))}</td></tr>
+            <tr class="pf2profit"><td class="pfl">순 이익 (월)</td><td class="pfv">${W(pf.netProfitMonthly48)}</td><td class="pfv">${W(pf.netProfitMonthly60)}</td></tr>
             <tr class="pf2profit"><td class="pfl">총 수익율</td><td class="pfv">${pct(pf.profitRate48)}</td><td class="pfv">${pct(pf.profitRate60)}</td></tr>
             <tr class="pf2profit"><td class="pfl">연간 수익율</td><td class="pfv">${pct(pf.annualProfitRate48)}</td><td class="pfv">${pct(pf.annualProfitRate60)}</td></tr>
           </tbody>
@@ -884,17 +884,17 @@ function renderProfit(r) {
           <tbody>
             <tr class="pf2sec"><td colspan="3">여유자금 분석</td></tr>
             <tr><td class="pfl">월 여유자금 <span style="font-size:11px">(렌트료/1.1 − 월조달이자 − GPS7천)</span></td><td class="pfv ${sm.monthlyFreeFlow48 < 0 ? 'pf2danger' : ''}">${W(sm.monthlyFreeFlow48)}${sm.monthlyFreeFlow48 < 0 ? ' ⚠️' : ''}</td><td class="pfv ${sm.monthlyFreeFlow60 < 0 ? 'pf2danger' : ''}">${W(sm.monthlyFreeFlow60)}${sm.monthlyFreeFlow60 < 0 ? ' ⚠️' : ''}</td></tr>
-            <tr><td class="pfl">총 여유자금 (월여유자금 × 기간)</td><td class="pfv">${W(sm.totalFreeFlow48)}</td><td class="pfv">${W(sm.totalFreeFlow60)}</td></tr>
+            <tr><td class="pfl">총 여유자금</td><td class="pfv">${W(sm.totalFreeFlow48)}</td><td class="pfv">${W(sm.totalFreeFlow60)}</td></tr>
             <tr class="pf2hl"><td class="pfl">일반시장 진입비용 (총여유자금 − 자동차세)</td><td class="pfv">${W(sm.marketEntryCost48)}</td><td class="pfv">${W(sm.marketEntryCost60)}</td></tr>
 
             <tr class="pf2sec"><td colspan="3">일반시장 진입 렌트료</td></tr>
-            <tr><td class="pfl">월 조달이자 (PMT 7%/12)</td><td class="pfv">${W(Math.round(c.fundInterest48/48))}</td><td class="pfv">${W(Math.round(c.fundInterest60/60))}</td></tr>
-            <tr><td class="pfl">보험료/월</td><td class="pfv">${W(Math.round(r.input.insurance/12))}</td><td class="pfv">${W(Math.round(r.input.insurance/12))}</td></tr>
+            <tr><td class="pfl">월 조달이자</td><td class="pfv">${W(c.fundIntMonthly48)}</td><td class="pfv">${W(c.fundIntMonthly60)}</td></tr>
+            <tr><td class="pfl">보험료/월</td><td class="pfv">${W(r.input.insuranceMonthly)}</td><td class="pfv">${W(r.input.insuranceMonthly)}</td></tr>
             <tr><td class="pfl">월 여유자금 차감</td><td class="pfv">-${W(sm.monthlyFreeFlow48)}</td><td class="pfv">-${W(sm.monthlyFreeFlow60)}</td></tr>
             <tr class="pf2hl"><td class="pfl">일반시장 진입 렌트료</td><td class="pfv">${W(sm.marketRent48)}</td><td class="pfv">${W(sm.marketRent60)}</td></tr>
 
             <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
-            <tr><td class="pfl">총 렌트료 수익 (진입렌트료 × 기간)</td><td class="pfv">${W(sm.totalRentRevenue48)}</td><td class="pfv">${W(sm.totalRentRevenue60)}</td></tr>
+            <tr><td class="pfl">총 렌트료 수익</td><td class="pfv">${W(sm.totalRentRevenue48)}</td><td class="pfv">${W(sm.totalRentRevenue60)}</td></tr>
             <tr><td class="pfl">처분이익 (예상 매각가)</td><td class="pfv">${W(sm.disposalProfit48)}</td><td class="pfv">${W(sm.disposalProfit60)}</td></tr>
             <tr class="pf2profit"><td class="pfl">총 수익 (렌트료수익 + 처분이익)</td><td class="pfv">${W(sm.totalRevenue48)}</td><td class="pfv">${W(sm.totalRevenue60)}</td></tr>
           </tbody>
@@ -953,57 +953,33 @@ function calcBreach() {
     alert("중도해지 개월수를 올바르게 입력해주세요 (1 ~ " + (period-1) + ")"); return;
   }
 
-  const c = r.cost, pf = r.profit;
-  const finalRent  = period === 48 ? c.finalRent48  : c.finalRent60;
-  const deposit    = Math.round(r.input.carPrice * r.input.depositRate);
-  const netProfit  = period === 48 ? pf.netProfit48 : pf.netProfit60;
-
-  const remaining   = period - month;
-  const paidRatio   = month / period;
-  const remainRatio = 1 - paidRatio;
-
-  // 위약채권 = max(0, 남은렌트료 × 30% - 보증금)
-  const remainLease    = finalRent * remaining;
-  const breachClaim    = Math.round(remainLease * 0.3);
-  const netBreachClaim = Math.max(0, breachClaim - deposit);
-
-  // 손실금액 = (취득세+채권+서비스비용+조달이자 전체) × 남은비율
-  const agencyForPeriod = period === 48 ? c.agency48 : c.agency60;
-  const fundInt = period === 48 ? c.fundInterest48 : c.fundInterest60;
-  const totalCost = c.acqTax + c.bond + agencyForPeriod + fundInt;
-  const totalLoss = Math.round(totalCost * remainRatio);
-
-  // 이미 회수한 이익 = 순이익(총) × 납입비율
-  const recoveredProfit = Math.round(netProfit * paidRatio);
-
-  // 최종 손익 = 위약채권 - 손실금액 + 이미 회수한 이익
-  const netResult = netBreachClaim - totalLoss + recoveredProfit;
-  const isSafe = netResult >= 0;
+  const b = r.breach && r.breach[String(period)] && r.breach[String(period)][month];
+  if (!b) return;
 
   const tbody = document.getElementById("breach-tbody");
   tbody.innerHTML = `
     <tr class="pf2sec"><td colspan="3">위약채권</td></tr>
-    <tr><td class="pfl">납입 / 남은 개월</td><td class="pfv">${month}개월 납입</td><td class="pfv">${remaining}개월 남음</td></tr>
-    <tr><td class="pfl">남은 렌트료 합계</td><td class="pfv">${W(remainLease)}</td><td class="pfv">월 ${W(finalRent)} × ${remaining}개월</td></tr>
-    <tr><td class="pfl">위약채권 (남은렌트료 × 30%)</td><td class="pfv">${W(breachClaim)}</td><td class="pfv"></td></tr>
-    <tr><td class="pfl">보증금 차감</td><td class="pfv">-${W(deposit)}</td><td class="pfv">${breachClaim < deposit ? '⚠️ 위약채권이 보증금보다 작음' : ''}</td></tr>
-    <tr class="pf2hl"><td class="pfl">실 위약채권</td><td class="pfv">${W(netBreachClaim)}</td><td class="pfv">${netBreachClaim === 0 ? '(0원 처리)' : ''}</td></tr>
+    <tr><td class="pfl">납입 / 남은 개월</td><td class="pfv">${month}개월 납입</td><td class="pfv">${b.remaining}개월 남음</td></tr>
+    <tr><td class="pfl">남은 렌트료 합계</td><td class="pfv">${W(b.remainLease)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">위약채권</td><td class="pfv">${W(b.breachClaim)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">보증금 차감</td><td class="pfv">-${W(b.deposit)}</td><td class="pfv">${b.breachClaim < b.deposit ? '⚠️ 위약채권이 보증금보다 작음' : ''}</td></tr>
+    <tr class="pf2hl"><td class="pfl">실 위약채권</td><td class="pfv">${W(b.netBreachClaim)}</td><td class="pfv">${b.netBreachClaim === 0 ? '(0원 처리)' : ''}</td></tr>
 
-    <tr class="pf2sec"><td colspan="3">손실금액 (전체비용 × ${(remainRatio*100).toFixed(1)}% 남은비율)</td></tr>
-    <tr><td class="pfl">취득세 (비례)</td><td class="pfv">${W(Math.round(c.acqTax * remainRatio))}</td><td class="pfv">${W(c.acqTax)} × ${(remainRatio*100).toFixed(1)}%</td></tr>
-    <tr><td class="pfl">채권 (비례)</td><td class="pfv">${W(Math.round(c.bond * remainRatio))}</td><td class="pfv">${W(c.bond)} × ${(remainRatio*100).toFixed(1)}%</td></tr>
-    <tr><td class="pfl">서비스비용 (비례)</td><td class="pfv">${W(Math.round(agencyForPeriod * remainRatio))}</td><td class="pfv">${W(agencyForPeriod)} × ${(remainRatio*100).toFixed(1)}%</td></tr>
-    <tr><td class="pfl">조달이자 (비례)</td><td class="pfv">${W(Math.round(fundInt * remainRatio))}</td><td class="pfv">${W(fundInt)} × ${(remainRatio*100).toFixed(1)}%</td></tr>
-    <tr class="pf2hl"><td class="pfl">총 손실금액</td><td class="pfv">${W(totalLoss)}</td><td class="pfv"></td></tr>
+    <tr class="pf2sec"><td colspan="3">손실금액</td></tr>
+    <tr><td class="pfl">취득세</td><td class="pfv">${W(b.acqTaxPro)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">채권</td><td class="pfv">${W(b.bondPro)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">서비스비용</td><td class="pfv">${W(b.agencyPro)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">조달이자</td><td class="pfv">${W(b.fundIntPro)}</td><td class="pfv"></td></tr>
+    <tr class="pf2hl"><td class="pfl">총 손실금액</td><td class="pfv">${W(b.totalLoss)}</td><td class="pfv"></td></tr>
 
-    <tr class="pf2sec"><td colspan="3">이미 회수한 이익 (납입비율 ${(paidRatio*100).toFixed(1)}%)</td></tr>
-    <tr><td class="pfl">순이익(총) × 납입비율</td><td class="pfv">+${W(recoveredProfit)}</td><td class="pfv">${W(netProfit)} × ${(paidRatio*100).toFixed(1)}%</td></tr>
+    <tr class="pf2sec"><td colspan="3">이미 회수한 이익</td></tr>
+    <tr><td class="pfl">회수 이익</td><td class="pfv">+${W(b.recoveredProfit)}</td><td class="pfv"></td></tr>
 
     <tr class="pf2sec"><td colspan="3">위약 손익 판단</td></tr>
-    <tr class="${isSafe ? 'pf2profit' : 'pf2danger'}">
-      <td class="pfl">실위약채권 - 손실금액 + 회수이익</td>
-      <td class="pfv">${W(netResult)}</td>
-      <td class="pfv">${isSafe ? '✅ 안전 (회수 가능)' : '❌ 위험 (손실 발생)'}</td>
+    <tr class="${b.isSafe ? 'pf2profit' : 'pf2danger'}">
+      <td class="pfl">최종 손익</td>
+      <td class="pfv">${W(b.netResult)}</td>
+      <td class="pfv">${b.isSafe ? '✅ 안전 (회수 가능)' : '❌ 위험 (손실 발생)'}</td>
     </tr>
   `;
   document.getElementById("breach-result").style.display = "block";
