@@ -358,10 +358,6 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
         <div class="pf-input-wrap"><input type="text" id="pi-discount" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
       </div>
       <div class="pf-input-row">
-        <label>제조사 탁송료</label>
-        <div class="pf-input-wrap"><input type="text" id="pi-factory-transfer" placeholder="250,000" oninput="fmtNum(this)"/><span>원</span></div>
-      </div>
-      <div class="pf-input-row">
         <label>전기차 보조금 <span style="font-size:11px;color:#888">(부가세 제외)</span></label>
         <div class="pf-input-wrap"><input type="text" id="pi-subsidy" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
       </div>
@@ -723,7 +719,6 @@ function getNum(id) {
 
 async function submitProfitInput() {
   const discountInput = getNum("pi-discount");
-  const transferInput = getNum("pi-factory-transfer");   // 제조사 탁송료(빈값이면 워커 기본 250,000)
   const subsidyInput  = getNum("pi-subsidy");
   const feeInput      = getNum("pi-fee");                // 수수료(빈값이면 워커 기본 300,000)
 
@@ -741,7 +736,6 @@ async function submitProfitInput() {
         price, depositRate: depRate/100,
         prepayRate: parseInt(document.getElementById("ps").value) / 100,
         discountAmount: discountInput || 0,
-        factoryTransfer: transferInput,      // null → 워커 기본값 250,000
         evSubsidy: subsidyInput || 0,
         feeAmount: feeInput,                 // null → 워커 기본값 300,000
       })
@@ -766,6 +760,7 @@ function closeProfitModal() { document.getElementById("profit-modal").classList.
 function renderProfit(r) {
   const c = r.cost, pf = r.profit, v = r.vehicle, ip = r.input;
   const pct = n => (n*100).toFixed(1) + "%";
+  const pct2 = n => (n*100).toFixed(2) + "%";
 
   document.getElementById("profit-doc").innerHTML = `
     <div class="pf-section">
@@ -775,39 +770,41 @@ function renderProfit(r) {
         <tr><td class="pfl">차종구분 / 연료</td><td class="pfv" colspan="2">${v.차종구분} / ${v.연료타입}</td></tr>
         <tr><td class="pfl">차량가격</td><td class="pfv" colspan="2">${W(ip.carPrice)}</td></tr>
         <tr><td class="pfl">보증금율 / 선납금율</td><td class="pfv" colspan="2">${(ip.depositRate*100).toFixed(0)}% / ${(ip.prepayRate*100).toFixed(0)}%</td></tr>
-        <tr><td class="pfl">제조사 할인 / 탁송료</td><td class="pfv" colspan="2">${W(ip.discountAmount)} / ${W(ip.factoryTransfer)}</td></tr>
-        <tr><td class="pfl">전기차 보조금</td><td class="pfv" colspan="2">${W(ip.evSubsidy)}</td></tr>
+        <tr><td class="pfl">제조사 할인</td><td class="pfv" colspan="2">${W(ip.discountAmount)}</td></tr>
+        <tr><td class="pfl">전기차 보조금 / 수수료</td><td class="pfv" colspan="2">${W(ip.evSubsidy)} / ${W(ip.feeAmount)}</td></tr>
       </table>
     </div>
     <div class="pf-section">
       <table class="pft2">
         <thead><tr><th class="pf2h">구분</th><th class="pf2h">48개월</th><th class="pf2h">60개월</th></tr></thead>
         <tbody>
+          <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
+          <tr><td class="pfl">실납입 월 렌트료</td><td class="pfv">${W(c.finalRent48)}</td><td class="pfv">${W(c.finalRent60)}</td></tr>
+          <tr><td class="pfl">렌트료 수익 <span style="font-size:11px">(렌트료÷1.1 × 기간)</span></td><td class="pfv">${W(c.렌트료수익48)}</td><td class="pfv">${W(c.렌트료수익60)}</td></tr>
+          <tr><td class="pfl">보증금 수익 <span style="font-size:11px">(보증금÷1.1)</span></td><td class="pfv">${W(c.보증금수익48)}</td><td class="pfv">${W(c.보증금수익60)}</td></tr>
+          <tr class="pf2hl"><td class="pfl">총 수익</td><td class="pfv">${W(pf.총수익48)}</td><td class="pfv">${W(pf.총수익60)}</td></tr>
+
           <tr class="pf2sec"><td colspan="3">취득원가</td></tr>
-          <tr><td class="pfl">면세가</td><td class="pfv" colspan="2">${W(c.면세가)}</td></tr>
-          <tr><td class="pfl">차량원가 <span style="font-size:11px">((면세가−할인+탁송료)÷1.1)</span></td><td class="pfv" colspan="2">${W(c.차량원가)}</td></tr>
-          <tr><td class="pfl">개소세(+교육세)</td><td class="pfv" colspan="2">${W(c.개소세)}</td></tr>
-          <tr><td class="pfl">취득세 <span style="font-size:11px">(영업용 4%)</span></td><td class="pfv" colspan="2">${W(c.취득세)}</td></tr>
-          <tr><td class="pfl">증지대 / 번호판 / 퀵 / 등록대행</td><td class="pfv" colspan="2">${W(c.증지대)} / ${W(c.번호판비)} / ${W(c.퀵비)} / ${W(c.등록대행비)}</td></tr>
-          <tr><td class="pfl">부대원가 계</td><td class="pfv" colspan="2">${W(c.부대원가)}</td></tr>
+          <tr><td class="pfl">차량원가 <span style="font-size:11px">((차량가−할인)÷1.1)</span></td><td class="pfv" colspan="2">${W(c.차량원가)}</td></tr>
+          <tr><td class="pfl">취득세 <span style="font-size:11px">(영업용 4%, 전기·경차 감면)</span></td><td class="pfv" colspan="2">${W(c.취득세)}</td></tr>
+          <tr><td class="pfl">채권</td><td class="pfv" colspan="2">${W(c.채권)}</td></tr>
+          <tr><td class="pfl">기타 부대비용 <span style="font-size:11px">(증지·번호판·퀵·등록대행)</span></td><td class="pfv" colspan="2">${W(c.부대비용)}</td></tr>
           ${c.전기차보조금 ? `<tr><td class="pfl">전기차 보조금 차감</td><td class="pfv" colspan="2">-${W(c.전기차보조금)}</td></tr>` : ""}
           <tr class="pf2hl"><td class="pfl">취득원가</td><td class="pfv" colspan="2">${W(c.취득원가)}</td></tr>
 
           <tr class="pf2sec"><td colspan="3">총 비용</td></tr>
           <tr><td class="pfl">취득원가</td><td class="pfv">${W(c.취득원가)}</td><td class="pfv">${W(c.취득원가)}</td></tr>
-          <tr><td class="pfl">총 자동차세 <span style="font-size:11px">(영업용 ${W(c.자동차세연)}/년)</span></td><td class="pfv">${W(c.총자동차세48)}</td><td class="pfv">${W(c.총자동차세60)}</td></tr>
-          <tr><td class="pfl">총 보험료 <span style="font-size:11px">(${W(c.보험연)}/년)</span></td><td class="pfv">${W(c.총보험료48)}</td><td class="pfv">${W(c.총보험료60)}</td></tr>
-          <tr><td class="pfl">총 고정비 <span style="font-size:11px">(2차탁송·블박·썬팅·검사비+하이링크)</span></td><td class="pfv">${W(c.총고정비48)}</td><td class="pfv">${W(c.총고정비60)}</td></tr>
+          <tr><td class="pfl">할부이자 <span style="font-size:11px">(조달 7%·차량가90%)</span></td><td class="pfv">${W(c.할부이자48)}</td><td class="pfv">${W(c.할부이자60)}</td></tr>
+          <tr><td class="pfl">총 자동차세 <span style="font-size:11px">(영업용)</span></td><td class="pfv">${W(c.총자동차세48)}</td><td class="pfv">${W(c.총자동차세60)}</td></tr>
+          <tr><td class="pfl">총 보험료 <span style="font-size:11px">(영업용)</span></td><td class="pfv">${W(c.총보험료48)}</td><td class="pfv">${W(c.총보험료60)}</td></tr>
+          <tr><td class="pfl">총 고정비 <span style="font-size:11px">(2차탁송·블박·썬팅·검사+하이링크)</span></td><td class="pfv">${W(c.총고정비48)}</td><td class="pfv">${W(c.총고정비60)}</td></tr>
           <tr><td class="pfl">수수료</td><td class="pfv">${W(c.수수료)}</td><td class="pfv">${W(c.수수료)}</td></tr>
-          <tr class="pf2hl"><td class="pfl">총 비용 계</td><td class="pfv">${W(c.총비용48)}</td><td class="pfv">${W(c.총비용60)}</td></tr>
+          <tr class="pf2hl"><td class="pfl">총 비용</td><td class="pfv">${W(pf.총비용48)}</td><td class="pfv">${W(pf.총비용60)}</td></tr>
 
-          <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
-          <tr><td class="pfl">실납입 렌트료</td><td class="pfv">${W(c.finalRent48)}</td><td class="pfv">${W(c.finalRent60)}</td></tr>
-          <tr><td class="pfl">보증금</td><td class="pfv" colspan="2">${W(c.deposit)}</td></tr>
-          <tr><td class="pfl">총 수익 <span style="font-size:11px">(렌트료÷1.1×기간 + 보증금÷1.1)</span></td><td class="pfv">${W(pf.총수익48)}</td><td class="pfv">${W(pf.총수익60)}</td></tr>
-
-          <tr class="pf2profit"><td class="pfl">순수익 (총수익 − 총비용)</td><td class="pfv">${W(pf.순수익48)}</td><td class="pfv">${W(pf.순수익60)}</td></tr>
-          <tr class="pf2profit"><td class="pfl">수익률 (순수익 ÷ 취득원가)</td><td class="pfv">${pct(pf.수익률48)}</td><td class="pfv">${pct(pf.수익률60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">총 순수익 (총수익 − 총비용)</td><td class="pfv">${W(pf.총순수익48)}</td><td class="pfv">${W(pf.총순수익60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">총 순수익률 <span style="font-size:11px">(÷취득원가)</span></td><td class="pfv">${pct(pf.총순수익률48)}</td><td class="pfv">${pct(pf.총순수익률60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">연 순수익 / 연 순수익률</td><td class="pfv">${W(pf.연순수익48)} / ${pct(pf.연순수익률48)}</td><td class="pfv">${W(pf.연순수익60)} / ${pct(pf.연순수익률60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">월 순수익 / 월 순수익률</td><td class="pfv">${W(pf.월순수익48)} / ${pct2(pf.월순수익률48)}</td><td class="pfv">${W(pf.월순수익60)} / ${pct2(pf.월순수익률60)}</td></tr>
         </tbody>
       </table>
     </div>
