@@ -257,7 +257,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
               <div class="sl-labels"><span>0%</span><span>25%</span><span>50%</span></div>
             </div>
           </div>
-          <div class="ip-row" id="row-extrap" style="align-items:flex-start;margin-top:8px;">
+          <div class="ip-row" id="row-extrap" style="display:none;align-items:flex-start;margin-top:8px;">
             <label style="padding-top:2px;">추가 P</label>
             <div class="sl-wrap">
               <div class="sl-top">
@@ -430,8 +430,6 @@ async function doLogin() {
 function resetForm() {
   // 전역 상태 초기화
   vehicles = []; selV = null; depRate = 10; CR = null; pMode = "pct"; adminVars = null;
-  // 수익분석 관리자 세션 초기화 (계정 전환 시 재인증 필요)
-  adminToken = null; sessionStorage.removeItem("at");
   // 차량 선택 드롭다운 초기화
   const sb = document.getElementById("s-brand");
   if (sb) sb.innerHTML = '<option value="">선택</option>';
@@ -480,9 +478,9 @@ async function showApp() {
   resetForm();
   document.getElementById("login-screen").style.display = "none";
   document.getElementById("app").style.display = "flex";
-  const cep = sessionStorage.getItem("cep");
+  // 구입형 렌트는 추가P 미사용 → 항상 숨김
   const epRow = document.getElementById("row-extrap");
-  if (epRow) epRow.style.display = (cep === "1") ? "" : "none";
+  if (epRow) epRow.style.display = "none";
   await loadVehicles();
 }
 async function loadVehicles() {
@@ -796,7 +794,7 @@ async function submitProfitInput() {
 
   document.getElementById("profit-input-modal").classList.remove("open");
 
-  const currentExtraPRate = parseInt(document.getElementById("eps").value) / 100;
+  const currentExtraPRate = 0;  // 구입형 렌트는 추가P 미사용
   adminVars = {
     interestRate: rateInput !== null ? rateInput/100 : null,
     agencyRate: agencyInput !== null ? agencyInput/100 : null,
@@ -814,7 +812,7 @@ async function submitProfitInput() {
         modelCode: null, lineupCode: selV.라인업코드,
         price, depositRate: depRate/100,
         prepayRate: parseInt(document.getElementById("ps").value) / 100,
-        extraPRate: parseInt(document.getElementById("eps").value) / 100,
+        extraPRate: 0,
         regdate: null,
         insurance: insuranceInput || 0,
         salePrice48: salePriceInput48 || 0,
@@ -882,7 +880,6 @@ function renderProfit(r) {
             <tr class="pf2sec"><td colspan="3">렌트료 계산</td></tr>
             <tr><td class="pfl">원비용 <span style="font-size:11px">(구입가÷1.1 + 취득세 + 채권 + 서비스비용 + 자동차세)</span></td><td class="pfv">${W(c.realCost48)}</td><td class="pfv">${W(c.realCost60)}</td></tr>
             <tr><td class="pfl">PMT (${(r.input.interestRate*100).toFixed(1)}%/12, 기간, 원비용)</td><td class="pfv">${W(c.pmtLease48)}</td><td class="pfv">${W(c.pmtLease60)}</td></tr>
-            <tr><td class="pfl">추가P 월</td><td class="pfv">+${W(c.extraPMonthly48)}</td><td class="pfv">+${W(c.extraPMonthly60)}</td></tr>
             <tr><td class="pfl">올림분</td><td class="pfv">+${W(c.roundingRaw48)}</td><td class="pfv">+${W(c.roundingRaw60)}</td></tr>
             <tr><td class="pfl">월 대여료</td><td class="pfv">${W(c.monthlyLease48)}</td><td class="pfv">${W(c.monthlyLease60)}</td></tr>
             <tr><td class="pfl">선납금 차감</td><td class="pfv">${W(c.finalRent48 - c.monthlyLease48)}</td><td class="pfv">${W(c.finalRent60 - c.monthlyLease60)}</td></tr>
@@ -901,7 +898,6 @@ function renderProfit(r) {
             <tr><td class="pfl">GPS 비용</td><td class="pfv">${W(c.gps48)}</td><td class="pfv">${W(c.gps60)}</td></tr>
             <tr><td class="pfl">자동차세 <span style="font-size:11px;color:#e67e22;">${c.carTaxDiscount > 0 ? '(차령 경감 ' + (c.carTaxDiscount*100).toFixed(0) + '% 적용)' : ''}</span></td><td class="pfv">${W(c.carTax48)}</td><td class="pfv">${W(c.carTax60)}</td></tr>
             <tr><td class="pfl">수수료</td><td class="pfv">${W(c.fee)}</td><td class="pfv">${W(c.fee)}</td></tr>
-            <tr><td class="pfl">추가P <span style="font-size:11px">(올림 전 실수수료)</span></td><td class="pfv">${W(c.extraPCost)}</td><td class="pfv">${W(c.extraPCost)}</td></tr>
             <tr class="pf2hl"><td class="pfl">총 비용 계</td><td class="pfv">${W(c.totalCost48)}</td><td class="pfv">${W(c.totalCost60)}</td></tr>
 
             <tr class="pf2profit"><td class="pfl">순 이익 (총)</td><td class="pfv">${W(pf.netProfit48)}</td><td class="pfv">${W(pf.netProfit60)}</td></tr>
