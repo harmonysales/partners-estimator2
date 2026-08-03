@@ -238,8 +238,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
           <div class="ip-row">
             <label>보증금율</label>
             <div class="rbg">
-              <button class="rbtn on" onclick="setDep(15,this)">15%</button>
-              <button class="rbtn" onclick="setDep(20,this)">20%</button>
+              <button class="rbtn on" onclick="setDep(10,this)">10%</button>
             </div>
           </div>
           <div class="ip-row" style="align-items:flex-start;margin-top:8px;">
@@ -397,7 +396,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
 const WORKER_URL = "https://rent-estimator-api.hmn1234.workers.dev";
 let token = sessionStorage.getItem("lt") || null;
 let adminToken = sessionStorage.getItem("at") || null;
-let vehicles = [], selV = null, depRate = 15, CR = null;
+let vehicles = [], selV = null, depRate = 10, CR = null;
 let pMode = "pct";
 window.onload = () => { if (token) showApp(); };
 document.getElementById("pw").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
@@ -419,7 +418,7 @@ async function doLogin() {
 }
 function resetForm() {
   // 전역 상태 초기화
-  vehicles = []; selV = null; depRate = 15; CR = null; pMode = "pct"; adminVars = null;
+  vehicles = []; selV = null; depRate = 10; CR = null; pMode = "pct"; adminVars = null;
   // 차량 선택 드롭다운 초기화
   const sb = document.getElementById("s-brand");
   if (sb) sb.innerHTML = '<option value="">선택</option>';
