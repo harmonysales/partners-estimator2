@@ -220,8 +220,6 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
             <select id="s-series" onchange="onSeries()" disabled><option value="">선택</option></select></div>
           <div class="ip-row"><label>라인업</label>
             <select id="s-lineup" onchange="onLineup()" disabled><option value="">선택</option></select></div>
-          <div class="ip-row"><label>주행거리</label>
-            <input type="text" id="i-mileage" placeholder="km" oninput="fmtNum(this)"/></div>
           <div class="ip-row"><label>차량가격</label>
             <input type="text" id="i-price" placeholder="원" oninput="fmtNum(this)"/></div>
         </div>
@@ -240,8 +238,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
           <div class="ip-row">
             <label>보증금율</label>
             <div class="rbg">
-              <button class="rbtn on" onclick="setDep(10,this)">10%</button>
-              <button class="rbtn" onclick="setDep(15,this)">15%</button>
+              <button class="rbtn on" onclick="setDep(15,this)">15%</button>
               <button class="rbtn" onclick="setDep(20,this)">20%</button>
             </div>
           </div>
@@ -400,7 +397,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
 const WORKER_URL = "https://rent-estimator-api.hmn1234.workers.dev";
 let token = sessionStorage.getItem("lt") || null;
 let adminToken = sessionStorage.getItem("at") || null;
-let vehicles = [], selV = null, depRate = 10, CR = null;
+let vehicles = [], selV = null, depRate = 15, CR = null;
 let pMode = "pct";
 window.onload = () => { if (token) showApp(); };
 document.getElementById("pw").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
@@ -422,7 +419,7 @@ async function doLogin() {
 }
 function resetForm() {
   // 전역 상태 초기화
-  vehicles = []; selV = null; depRate = 10; CR = null; pMode = "pct"; adminVars = null;
+  vehicles = []; selV = null; depRate = 15; CR = null; pMode = "pct"; adminVars = null;
   // 차량 선택 드롭다운 초기화
   const sb = document.getElementById("s-brand");
   if (sb) sb.innerHTML = '<option value="">선택</option>';
@@ -433,7 +430,7 @@ function resetForm() {
   // 차량 상세정보 초기화
   clearDetail();
   // 입력 필드 초기화
-  ["i-mileage","i-price","i-sales","i-phone"].forEach(id => {
+  ["i-price","i-sales","i-phone"].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.value = ""; if (el._raw !== undefined) el._raw = ""; }
   });
@@ -587,8 +584,7 @@ async function doCalc() {
       brandCode: selV.브랜드코드, seriesCode: selV.시리즈코드, seriesName: selV.시리즈명,
       modelCode: null, lineupCode: selV.라인업코드,
       price, depositRate: depRate/100, prepayRate: preRate, extraPRate,
-      regdate: null,
-      mileage: (document.getElementById("i-mileage")._raw || document.getElementById("i-mileage").value).replace(/,/g,"")
+      regdate: null
     };
     if (adminVars) Object.assign(body, adminVars);
     const r = await fetch(`${WORKER_URL}/api/rent-estimate`, {
@@ -674,7 +670,6 @@ function renderQuote() {
         <div class="qv-row"><span class="qv-key">모델명</span><span class="qv-val">${v.시리즈명}</span></div>
         <div class="qv-row"><span class="qv-key">라인업</span><span class="qv-val">${v.라인업명}</span></div>
         
-        <div class="qv-row"><span class="qv-key">주행거리</span><span class="qv-val">${inp.mileage?Number(inp.mileage).toLocaleString()+" km":"-"}</span></div>
         <div class="qv-row"><span class="qv-key">차량가격</span><span class="qv-val">${W(inp.carPrice)}</span></div>
       </div>
       <div class="qvright">
@@ -698,7 +693,6 @@ function renderQuote() {
         <tr class="qins"><td class="ql">보험담보조건 및 면책금</td><td>${(v.브랜드명==="BMW"||v.브랜드명==="벤츠")?
 "임직원보험 가입<br>대인 무제한 / 대물 1억 / 자기신체사고 1억<br>차량손해면책금 30~100만원 / 무보험차상해 미가입<br>차대차 100만원 / 단독사고 200만원":
 "임직원보험 가입<br>대인 무제한 / 대물 1억 / 자기신체사고 1억<br>차량손해면책금 30~100만원 / 무보험차상해 미가입"}<br><span style="font-size:10px;color:#888">※ 차종 및 조건에 따라 보험요건이 달라질 수 있습니다.</span></td></tr>
-        <tr class="qsub"><td class="ql">약정거리</td><td>${parseInt((document.getElementById("i-mileage")._raw||document.getElementById("i-mileage").value).replace(/,/g,""))||0 ? (parseInt((document.getElementById("i-mileage")._raw||document.getElementById("i-mileage").value).replace(/,/g,""))||0).toLocaleString()+"km / 년" : "-"}</td></tr>
         <tr class="qsub"><td class="ql">보증금 (${(inp.depositRate*100).toFixed(0)}%)</td><td>${W(l.deposit48)}</td></tr>
         <tr class="qsub"><td class="ql">선납금 (${(inp.prepayRate*100).toFixed(0)}%)</td><td>${W(l.prepay48)}</td></tr>
         <tr class="qsub"><td class="ql">만기인수가</td><td>${W(l.deposit48)}</td></tr>
