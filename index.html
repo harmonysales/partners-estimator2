@@ -830,143 +830,53 @@ async function submitProfitInput() {
 function closeProfitModal() { document.getElementById("profit-modal").classList.remove("open"); }
 
 function renderProfit(r) {
-  const c = r.cost, pf = r.profit, sm = r.sim, v = r.vehicle;
-  const pct = n => (n*100).toFixed(1) + "%";
-  const transferRow = c.transfer ? `<tr><td class="pfl">이전비용</td><td class="pfv">${W(c.transfer)}</td><td class="pfv">${W(c.transfer)}</td></tr>` : "";
-
+  const a = r.pf, v = r.vehicle;
+  const pct = n => (n * 100).toFixed(1) + "%";
   document.getElementById("profit-doc").innerHTML = `
-    <!-- 탭 메뉴 -->
-    <div class="pf-tabs">
-      <button class="pf-tab on" onclick="pfTab(0)">수익분석</button>
-      <button class="pf-tab" onclick="pfTab(1)">일반시장 진입 시뮬레이션</button>
-      <button class="pf-tab" onclick="pfTab(2)">위약 시뮬레이션</button>
+    <div class="pf-section">
+      <div class="pf-title">차량 / 적용 변수</div>
+      <table class="pft">
+        <tr><td class="pfl">차량</td><td class="pfv" colspan="2">${v.브랜드명} ${v.시리즈명} ${v.라인업명}</td></tr>
+        <tr><td class="pfl">차량가격</td><td class="pfv" colspan="2">${W(r.input.carPrice)}</td></tr>
+        <tr><td class="pfl">보증금율 / 선납금율</td><td class="pfv" colspan="2">${(r.input.depositRate*100).toFixed(0)}% / ${(r.input.prepayRate*100).toFixed(0)}%</td></tr>
+        <tr><td class="pfl">금리 (렌트료 PMT)</td><td class="pfv" colspan="2">${(r.input.interestRate*100).toFixed(1)}%</td></tr>
+        <tr><td class="pfl">수수료</td><td class="pfv" colspan="2">${W(r.input.feeAmount)}</td></tr>
+      </table>
     </div>
+    <div class="pf-section">
+      <div class="pf-title">수익분석 (영업용 기준)</div>
+      <table class="pft2">
+        <thead><tr><th class="pf2h">구분</th><th class="pf2h">48개월</th><th class="pf2h">60개월</th></tr></thead>
+        <tbody>
+          <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
+          <tr><td class="pfl">렌트료 수익 <span style="font-size:11px">(실납입÷1.1×기간)</span></td><td class="pfv">${W(a.렌트료수익48)}</td><td class="pfv">${W(a.렌트료수익60)}</td></tr>
+          <tr><td class="pfl">보증금(만기인수가) 수익</td><td class="pfv">${W(a.보증금수익)}</td><td class="pfv">${W(a.보증금수익)}</td></tr>
+          <tr class="pf2hl"><td class="pfl">총 수익</td><td class="pfv">${W(a.총수익48)}</td><td class="pfv">${W(a.총수익60)}</td></tr>
 
-    <!-- 탭 0: 수익분석 -->
-    <div class="pf-tabcontent" id="pftab-0">
-      <div class="pf-section">
-        <div class="pf-title">차량 / 적용 변수</div>
-        <table class="pft">
-          <tr><td class="pfl">차량</td><td class="pfv" colspan="2">${v.브랜드명} ${v.시리즈명} ${v.라인업명}</td></tr>
-          <tr><td class="pfl">차량가격</td><td class="pfv" colspan="2">${W(r.input.carPrice)}</td></tr>
-          <tr><td class="pfl">보증금율 / 선납금율</td><td class="pfv" colspan="2">${(r.input.depositRate*100).toFixed(0)}% / ${(r.input.prepayRate*100).toFixed(0)}%</td></tr>
-          <tr><td class="pfl">이자수익 금리</td><td class="pfv" colspan="2">${(r.input.interestRate*100).toFixed(1)}%</td></tr>
-          <tr><td class="pfl">수수료</td><td class="pfv" colspan="2">${W(r.input.feeAmount)}</td></tr>
-          <tr><td class="pfl">조달기준 비율</td><td class="pfv" colspan="2">${(r.input.fundRatio*100).toFixed(0)}%</td></tr>
-        </table>
-      </div>
-      <div class="pf-section">
-        <table class="pft2">
-          <thead><tr><th class="pf2h">구분</th><th class="pf2h">48개월</th><th class="pf2h">60개월</th></tr></thead>
-          <tbody>
-            <tr class="pf2sec"><td colspan="3">원비용 구성</td></tr>
-            <tr><td class="pfl">구입가</td><td class="pfv">${W(r.input.carPriceSupply)}</td><td class="pfv">${W(r.input.carPriceSupply)}</td></tr>
-            <tr><td class="pfl">취득세</td><td class="pfv">${W(c.acqTax)}</td><td class="pfv">${W(c.acqTax)}</td></tr>
-            <tr><td class="pfl">채권</td><td class="pfv">${W(c.bond)}</td><td class="pfv">${W(c.bond)}</td></tr>
-            <tr><td class="pfl">서비스비용</td><td class="pfv">${W(c.agency48)}</td><td class="pfv">${W(c.agency60)}</td></tr>
-            <tr><td class="pfl">자동차세${c.carTaxDiscount > 0 ? ' <span style="font-size:10px;color:#e67e22">(차령 경감 ' + (c.carTaxDiscount*100).toFixed(0) + '% 적용)</span>' : ''}</td><td class="pfv">${W(c.carTax48)}</td><td class="pfv">${W(c.carTax60)}</td></tr>
-            <tr class="pf2hl"><td class="pfl">원비용</td><td class="pfv">${W(c.realCost48)}</td><td class="pfv">${W(c.realCost60)}</td></tr>
+          <tr class="pf2sec"><td colspan="3">총 비용</td></tr>
+          <tr><td class="pfl">차량원가 <span style="font-size:11px">((차량가−할인)÷1.1)</span></td><td class="pfv">${W(a.차량원가)}</td><td class="pfv">${W(a.차량원가)}</td></tr>
+          <tr><td class="pfl">취득세 <span style="font-size:11px">(영업용 4%)</span></td><td class="pfv">${W(a.취득세)}</td><td class="pfv">${W(a.취득세)}</td></tr>
+          <tr><td class="pfl">채권</td><td class="pfv">${W(a.채권)}</td><td class="pfv">${W(a.채권)}</td></tr>
+          <tr><td class="pfl">기타 부대비용 <span style="font-size:11px">(증지·번호판·등록대행 등)</span></td><td class="pfv">${W(a.부대비용)}</td><td class="pfv">${W(a.부대비용)}</td></tr>
+          <tr class="pf2hl"><td class="pfl">취득원가</td><td class="pfv">${W(a.취득원가)}</td><td class="pfv">${W(a.취득원가)}</td></tr>
+          <tr><td class="pfl">조달기준액 <span style="font-size:11px">(차량가×90%)</span></td><td class="pfv">${W(a.조달기준액)}</td><td class="pfv">${W(a.조달기준액)}</td></tr>
+          <tr><td class="pfl">할부이자 <span style="font-size:11px">(조달 7%, 원리금−원금)</span></td><td class="pfv">${W(a.할부이자48)}</td><td class="pfv">${W(a.할부이자60)}</td></tr>
+          <tr><td class="pfl">총 자동차세 <span style="font-size:11px">(영업용)</span></td><td class="pfv">${W(a.총자동차세48)}</td><td class="pfv">${W(a.총자동차세60)}</td></tr>
+          <tr><td class="pfl">총 보험료 <span style="font-size:11px">(영업용)</span></td><td class="pfv">${W(a.총보험료48)}</td><td class="pfv">${W(a.총보험료60)}</td></tr>
+          <tr><td class="pfl">총 고정비 <span style="font-size:11px">(2차탁송·블박·썬팅·검사·하이링크)</span></td><td class="pfv">${W(a.총고정비48)}</td><td class="pfv">${W(a.총고정비60)}</td></tr>
+          <tr><td class="pfl">수수료</td><td class="pfv">${W(a.수수료)}</td><td class="pfv">${W(a.수수료)}</td></tr>
+          <tr class="pf2hl"><td class="pfl">총 비용</td><td class="pfv">${W(a.총비용48)}</td><td class="pfv">${W(a.총비용60)}</td></tr>
 
-            <tr class="pf2sec"><td colspan="3">렌트료 계산</td></tr>
-            <tr><td class="pfl">원비용 <span style="font-size:11px">(구입가÷1.1 + 취득세 + 채권 + 서비스비용 + 자동차세)</span></td><td class="pfv">${W(c.realCost48)}</td><td class="pfv">${W(c.realCost60)}</td></tr>
-            <tr><td class="pfl">PMT (${(r.input.interestRate*100).toFixed(1)}%/12, 기간, 원비용)</td><td class="pfv">${W(c.pmtLease48)}</td><td class="pfv">${W(c.pmtLease60)}</td></tr>
-            <tr><td class="pfl">올림분</td><td class="pfv">+${W(c.roundingRaw48)}</td><td class="pfv">+${W(c.roundingRaw60)}</td></tr>
-            <tr><td class="pfl">월 대여료</td><td class="pfv">${W(c.monthlyLease48)}</td><td class="pfv">${W(c.monthlyLease60)}</td></tr>
-            <tr><td class="pfl">선납금 차감</td><td class="pfv">${W(c.finalRent48 - c.monthlyLease48)}</td><td class="pfv">${W(c.finalRent60 - c.monthlyLease60)}</td></tr>
-            <tr class="pf2hl"><td class="pfl">실납입 대여료</td><td class="pfv">${W(c.finalRent48)}</td><td class="pfv">${W(c.finalRent60)}</td></tr>
-            <tr><td class="pfl">공급가액 / 부가세</td><td class="pfv">${W(c.leaseSupply48)} / ${W(c.leaseVat48)}</td><td class="pfv">${W(c.leaseSupply60)} / ${W(c.leaseVat60)}</td></tr>
-
-            <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
-            <tr><td class="pfl">렌트료 수익</td><td class="pfv">${W(c.rentRevenue48)}</td><td class="pfv">${W(c.rentRevenue60)}</td></tr>
-            <tr><td class="pfl">선납금</td><td class="pfv">${W(c.prepaySupply48)}</td><td class="pfv">${W(c.prepaySupply60)}</td></tr>
-            <tr><td class="pfl">잔존매각</td><td class="pfv">${W(c.residualSale48)}</td><td class="pfv">${W(c.residualSale60)}</td></tr>
-            <tr class="pf2hl"><td class="pfl">총 수익 계</td><td class="pfv">${W(c.totalRevenue48)}</td><td class="pfv">${W(c.totalRevenue60)}</td></tr>
-
-            <tr class="pf2sec"><td colspan="3">총 비용</td></tr>
-            <tr><td class="pfl">취득원가 <span style="font-size:11px">(구입가÷1.1 + 취득세 + 채권)</span></td><td class="pfv">${W(c.acquisition48)}</td><td class="pfv">${W(c.acquisition60)}</td></tr>
-            <tr><td class="pfl">조달이자 <span style="font-size:11px">(7%, 기간별 PMT)</span></td><td class="pfv">${W(c.fundInterest48)}</td><td class="pfv">${W(c.fundInterest60)}</td></tr>
-            <tr><td class="pfl">GPS 비용</td><td class="pfv">${W(c.gps48)}</td><td class="pfv">${W(c.gps60)}</td></tr>
-            <tr><td class="pfl">자동차세 <span style="font-size:11px;color:#e67e22;">${c.carTaxDiscount > 0 ? '(차령 경감 ' + (c.carTaxDiscount*100).toFixed(0) + '% 적용)' : ''}</span></td><td class="pfv">${W(c.carTax48)}</td><td class="pfv">${W(c.carTax60)}</td></tr>
-            <tr><td class="pfl">수수료</td><td class="pfv">${W(c.fee)}</td><td class="pfv">${W(c.fee)}</td></tr>
-            <tr class="pf2hl"><td class="pfl">총 비용 계</td><td class="pfv">${W(c.totalCost48)}</td><td class="pfv">${W(c.totalCost60)}</td></tr>
-
-            <tr class="pf2profit"><td class="pfl">순 이익 (총)</td><td class="pfv">${W(pf.netProfit48)}</td><td class="pfv">${W(pf.netProfit60)}</td></tr>
-            <tr class="pf2profit"><td class="pfl">순 이익 (월)</td><td class="pfv">${W(pf.netProfitMonthly48)}</td><td class="pfv">${W(pf.netProfitMonthly60)}</td></tr>
-            <tr class="pf2profit"><td class="pfl">총 수익율</td><td class="pfv">${pct(pf.profitRate48)}</td><td class="pfv">${pct(pf.profitRate60)}</td></tr>
-            <tr class="pf2profit"><td class="pfl">연간 수익율</td><td class="pfv">${pct(pf.annualProfitRate48)}</td><td class="pfv">${pct(pf.annualProfitRate60)}</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 탭 1: 일반시장 진입 시뮬레이션 -->
-    <div class="pf-tabcontent" id="pftab-1" style="display:none">
-      <div class="pf-section">
-        <div class="pf-title">입력값</div>
-        <table class="pft">
-          <tr><td class="pfl">보험료 (연간)</td><td class="pfv">${W(r.input.insurance)}</td></tr>
-          <tr><td class="pfl">예상 매각가 (48개월)</td><td class="pfv">${W(r.input.salePrice48)}</td></tr>
-          <tr><td class="pfl">예상 매각가 (60개월)</td><td class="pfv">${W(r.input.salePrice60)}</td></tr>
-        </table>
-      </div>
-      <div class="pf-section">
-        <table class="pft2">
-          <thead><tr><th class="pf2h">구분</th><th class="pf2h">48개월</th><th class="pf2h">60개월</th></tr></thead>
-          <tbody>
-            <tr class="pf2sec"><td colspan="3">여유자금 분석</td></tr>
-            <tr><td class="pfl">월 여유자금 <span style="font-size:11px">(렌트료/1.1 − 월조달이자 − GPS7천)</span></td><td class="pfv ${sm.monthlyFreeFlow48 < 0 ? 'pf2danger' : ''}">${W(sm.monthlyFreeFlow48)}${sm.monthlyFreeFlow48 < 0 ? ' ⚠️' : ''}</td><td class="pfv ${sm.monthlyFreeFlow60 < 0 ? 'pf2danger' : ''}">${W(sm.monthlyFreeFlow60)}${sm.monthlyFreeFlow60 < 0 ? ' ⚠️' : ''}</td></tr>
-            <tr><td class="pfl">총 여유자금</td><td class="pfv">${W(sm.totalFreeFlow48)}</td><td class="pfv">${W(sm.totalFreeFlow60)}</td></tr>
-            <tr class="pf2hl"><td class="pfl">일반시장 진입비용 (총여유자금 − 자동차세)</td><td class="pfv">${W(sm.marketEntryCost48)}</td><td class="pfv">${W(sm.marketEntryCost60)}</td></tr>
-
-            <tr class="pf2sec"><td colspan="3">일반시장 진입 렌트료</td></tr>
-            <tr><td class="pfl">월 조달이자</td><td class="pfv">${W(c.fundIntMonthly48)}</td><td class="pfv">${W(c.fundIntMonthly60)}</td></tr>
-            <tr><td class="pfl">보험료/월</td><td class="pfv">${W(r.input.insuranceMonthly)}</td><td class="pfv">${W(r.input.insuranceMonthly)}</td></tr>
-            <tr><td class="pfl">월 여유자금 차감</td><td class="pfv">-${W(sm.monthlyFreeFlow48)}</td><td class="pfv">-${W(sm.monthlyFreeFlow60)}</td></tr>
-            <tr class="pf2hl"><td class="pfl">일반시장 진입 렌트료</td><td class="pfv">${W(sm.marketRent48)}</td><td class="pfv">${W(sm.marketRent60)}</td></tr>
-
-            <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
-            <tr><td class="pfl">총 렌트료 수익</td><td class="pfv">${W(sm.totalRentRevenue48)}</td><td class="pfv">${W(sm.totalRentRevenue60)}</td></tr>
-            <tr><td class="pfl">처분이익 (예상 매각가)</td><td class="pfv">${W(sm.disposalProfit48)}</td><td class="pfv">${W(sm.disposalProfit60)}</td></tr>
-            <tr class="pf2profit"><td class="pfl">총 수익 (렌트료수익 + 처분이익)</td><td class="pfv">${W(sm.totalRevenue48)}</td><td class="pfv">${W(sm.totalRevenue60)}</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 탭 2: 위약 시뮬레이션 -->
-    <div class="pf-tabcontent" id="pftab-2" style="display:none">
-      <div class="pf-section">
-        <div class="pf-title">위약 시뮬레이션</div>
-        <div style="padding:12px 16px">
-          <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
-            <div>
-              <label style="font-size:13px;font-weight:600;color:var(--text2)">계약기간</label><br>
-              <select id="breach-period" style="margin-top:4px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:14px">
-                <option value="48">48개월</option>
-                <option value="60">60개월</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:13px;font-weight:600;color:var(--text2)">중도해지 개월수</label><br>
-              <input type="number" id="breach-month" placeholder="예: 24" min="1" max="60"
-                style="margin-top:4px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:14px;width:120px">
-            </div>
-            <div style="padding-top:18px">
-              <button onclick="calcBreach()" style="padding:7px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:700">계산</button>
-            </div>
-          </div>
-          <div id="breach-result" style="display:none">
-            <table class="pft2" style="margin-top:8px">
-              <thead><tr><th class="pf2h">구분</th><th class="pf2h">금액</th><th class="pf2h">비고</th></tr></thead>
-              <tbody id="breach-tbody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+          <tr class="pf2profit"><td class="pfl">총 순수익</td><td class="pfv">${W(a.총순수익48)}</td><td class="pfv">${W(a.총순수익60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">총 순수익률</td><td class="pfv">${pct(a.총순수익률48)}</td><td class="pfv">${pct(a.총순수익률60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">연 순수익</td><td class="pfv">${W(a.연순수익48)}</td><td class="pfv">${W(a.연순수익60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">연 순수익률</td><td class="pfv">${pct(a.연순수익률48)}</td><td class="pfv">${pct(a.연순수익률60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">월 순수익</td><td class="pfv">${W(a.월순수익48)}</td><td class="pfv">${W(a.월순수익60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">월 순수익률</td><td class="pfv">${pct(a.월순수익률48)}</td><td class="pfv">${pct(a.월순수익률60)}</td></tr>
+        </tbody>
+      </table>
     </div>
   `;
-
-  // 위약 계산 함수 저장
   window._profitResult = r;
 }
 
