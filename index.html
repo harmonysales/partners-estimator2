@@ -50,6 +50,7 @@ header{background:#fff;border-bottom:1px solid var(--border2);padding:0 28px;hei
 .rbtn{flex:1;padding:5px 4px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s;}
 .rbtn:hover{border-color:var(--primary);color:var(--primary);}
 .rbtn.on{background:var(--primary);border-color:var(--primary);color:#fff;}
+.rbtn:disabled{opacity:.4;cursor:not-allowed;background:#f1f1f1;border-color:var(--border);color:var(--text2);}
 .sl-wrap{flex:1;}
 .sl-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
 .sl-val{font-size:15px;font-weight:800;color:var(--primary);}
@@ -221,7 +222,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
           <div class="ip-row"><label>라인업</label>
             <select id="s-lineup" onchange="onLineup()" disabled><option value="">선택</option></select></div>
           <div class="ip-row"><label>차량가격</label>
-            <input type="text" id="i-price" placeholder="원" oninput="fmtNum(this)"/></div>
+            <input type="text" id="i-price" placeholder="원" oninput="fmtNum(this);refreshDep()"/></div>
         </div>
         <div class="ip-block">
           <div class="ip-btitle">▢ 차량 세부정보</div>
@@ -239,6 +240,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
             <label>보증금율</label>
             <div class="rbg">
               <button class="rbtn on" onclick="setDep(10,this)">10%</button>
+              <button class="rbtn" onclick="setDep(20,this)" disabled>20%</button>
             </div>
           </div>
           <div class="ip-row" style="align-items:flex-start;margin-top:8px;">
@@ -434,7 +436,7 @@ function resetForm() {
     if (el) { el.value = ""; if (el._raw !== undefined) el._raw = ""; }
   });
   // 보증금율 → 기본 10%
-  document.querySelectorAll(".rbtn").forEach((b,i) => b.classList.toggle("on", i === 0));
+  refreshDep();
   // 선납금율 → 0%
   const ps = document.getElementById("ps");
   if (ps) ps.value = 0;
@@ -539,18 +541,37 @@ function fillDetail(v) {
   const vals = [v.차종, v.연료타입, v.배기량?(v.배기량.toLocaleString()+" cc"):"-",
     (v.적재량||0)+" kg", v.인승?(v.인승+"인승"):"-", v.차종구분||"-"];
   ids.forEach((id,i) => { const el=document.getElementById(id); el.textContent=vals[i]; el.classList.remove("empty"); });
+  refreshDep();
 }
 function clearDetail() {
   ["d-type","d-fuel","d-cc","d-load","d-seats","d-taxtype"].forEach(id => {
     const el=document.getElementById(id); el.textContent="-"; el.classList.add("empty");
   });
   selV = null;
+  refreshDep();
 }
 function updateBtn() { document.getElementById("cbtn").disabled = !selV; }
 function setDep(r, el) {
   depRate = r;
   document.querySelectorAll(".rbtn").forEach(b => b.classList.remove("on"));
   el.classList.add("on");
+}
+function effPrice() {
+  const el = document.getElementById("i-price");
+  return parseInt(((el && (el._raw || el.value)) || "").toString().replace(/,/g,"")) || (selV ? selV.기본가격 : 0) || 0;
+}
+function setDepRate(r) {
+  depRate = r;
+  document.querySelectorAll(".rbtn").forEach(b => b.classList.toggle("on", parseInt(b.textContent) === r));
+}
+// 매입가 5천만원 기준: 미만이면 10%만, 이상이면 20%만 활성(그게 기본)
+function refreshDep() {
+  const high = effPrice() >= 50000000;
+  document.querySelectorAll(".rbtn").forEach(b => {
+    const r = parseInt(b.textContent);
+    b.disabled = high ? (r !== 20) : (r !== 10);
+  });
+  setDepRate(high ? 20 : 10);
 }
 function getPAmount(price) { return 0; }
 function onExtraP(val) {
@@ -572,9 +593,13 @@ let adminVars = null;
 
 async function doCalc() {
   if (!selV) return;
+  const price = parseInt((document.getElementById("i-price")._raw || document.getElementById("i-price").value).replace(/,/g,"")) || selV.기본가격 || 0;
+  if (price >= 50000000 && depRate < 20) {
+    alert("차량가격이 5천만원 이상인 경우\n보증금은 20% 이상만 설정 가능합니다.");
+    return;
+  }
   const btn = document.getElementById("cbtn");
   btn.disabled = true; btn.textContent = "계산 중...";
-  const price = parseInt((document.getElementById("i-price")._raw || document.getElementById("i-price").value).replace(/,/g,"")) || selV.기본가격 || 0;
   const preRate = parseInt(document.getElementById("ps").value) / 100;
   const extraPRate = parseInt(document.getElementById("eps").value) / 100;
   try {
