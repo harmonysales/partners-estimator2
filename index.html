@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>하모니렌트카 구입형 렌트 견적기</title>
+<title>하모니렌트카 구입형 렌트 견적기 (본사용)</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
 :root {
@@ -173,7 +173,7 @@ table.ct tr.red td.lb{background:#ffe4e4;}
 table.qt{width:100%;border-collapse:collapse;font-size:12px;}
 table.qt th{background:var(--primary);color:#fff;padding:7px 10px;text-align:center;font-weight:600;}
 table.qt td{padding:6px 10px;border:1px solid #ddd;text-align:center;}
-table.qt td.ql{text-align:left;padding-left:12px;white-space:nowrap;}
+table.qt td.ql{text-align:left;padding-left:12px;}
 table.qt tr.qsub td{background:#f8faff;}
 table.qt tr.qhl td{background:var(--yellow);font-weight:700;}
 table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
@@ -192,8 +192,8 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
 <div id="login-screen">
   <div class="lbox">
     <div class="logo">HARMONY RENTCAR</div>
-    <h1>구입형 렌트 견적기</h1>
-    <p>인가된 파트너만 접근할 수 있습니다.</p>
+    <h1>구입형 렌트 견적기 (본사용)</h1>
+    <p>본 견적기는 본사용으로, 외부 공유 불가합니다.</p>
     <input type="text" id="uid" placeholder="아이디 입력" style="margin-bottom:8px;"/>
     <input type="password" id="pw" placeholder="비밀번호 입력"/>
     <button onclick="doLogin()">로그인</button>
@@ -205,7 +205,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
     <div class="h-left">
       <div class="h-logo">HARMONY<br>RENTCAR</div>
       <div class="h-div"></div>
-      <div class="h-title">구입형 렌트 견적기 <span style="font-size:11px;color:#aaa;font-weight:400">ver.2026.08.01</span></div>
+      <div class="h-title">구입형 렌트 견적기 (본사용) <span style="font-size:11px;color:#aaa;font-weight:400">ver.2026.08.01</span></div>
     </div>
     <button class="h-out" onclick="doLogout()">로그아웃</button>
   </header>
@@ -222,7 +222,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
           <div class="ip-row"><label>라인업</label>
             <select id="s-lineup" onchange="onLineup()" disabled><option value="">선택</option></select></div>
           <div class="ip-row"><label>차량가격</label>
-            <input type="text" id="i-price" placeholder="원" oninput="fmtNum(this);refreshDep()"/></div>
+            <input type="text" id="i-price" placeholder="원" oninput="fmtNum(this)"/></div>
         </div>
         <div class="ip-block">
           <div class="ip-btitle">▢ 차량 세부정보</div>
@@ -240,8 +240,8 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
             <label>보증금율</label>
             <div class="rbg">
               <button class="rbtn on" onclick="setDep(10,this)">10%</button>
-              <button class="rbtn" onclick="setDep(15,this)" disabled>15%</button>
-              <button class="rbtn" onclick="setDep(20,this)" disabled>20%</button>
+              <button class="rbtn" onclick="setDep(15,this)">15%</button>
+              <button class="rbtn" onclick="setDep(20,this)">20%</button>
             </div>
           </div>
           <div class="ip-row" style="align-items:flex-start;margin-top:8px;">
@@ -287,6 +287,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
     </div>
     <div id="result">
       <div class="result-top">
+        <button class="profit-btn" onclick="openProfitModal()">📊 수익분석</button>
         <button class="print-btn" onclick="openModal()">
           <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
@@ -305,7 +306,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
             <div style="font-size:11px;opacity:.8;text-align:right;margin-top:2px;"></div>
           </div>
         </div>
-        <div class="summary-note">※ 만기인수금은 납부하신 보증금으로 대체(상계)되어, 만기 시 추가 납부 없이 차량을 인수합니다.</div>
+        <div class="summary-note"></div>
       </div>
       <div class="cmp-outer">
         <div class="cmp-header">【하모니】 구입형 렌트 견적</div>
@@ -327,9 +328,77 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
   </div>
 </div>
 
+<!-- 관리자 인증 모달 -->
+<div class="modal-bg" id="padmin-modal">
+  <div class="padmin-box">
+    <h3>🔒 수익분석 관리자 인증</h3>
+    <p>본사 직원 전용 기능입니다</p>
+    <input type="password" id="padmin-pw" placeholder="관리자 비밀번호"/>
+    <button onclick="doAdminLogin()">확인</button>
+    <div id="padmin-err"></div>
+  </div>
+</div>
+
+<!-- 수익분석 입력값 설정 모달 -->
+<div class="modal-bg" id="profit-input-modal">
+  <div class="padmin-box" style="width:400px;">
+    <h3>⚙️ 수익분석 변수 설정</h3>
+    <p>비워두면 기본값이 적용됩니다</p>
+    <div style="text-align:left;">
+      <div class="pf-input-row">
+        <label>이자수익 금리</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-rate" placeholder="15"/><span>%</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>서비스비용 비율</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-agency" placeholder="5"/><span>%</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>수수료</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-fee" placeholder="300,000" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>이전비용</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-transfer" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>조달기준 비율</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-fundratio" placeholder="90"/><span>%</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>보험료 (연간)</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-insurance" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>예상 매각가 (48개월)</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-saleprice48" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>예상 매각가 (60개월)</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-saleprice60" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+    </div>
+    <button onclick="submitProfitInput()" style="margin-top:14px;">수익분석 계산</button>
+  </div>
+</div>
+
+<!-- 수익분석 모달 -->
+<div class="modal-bg" id="profit-modal">
+  <div class="modal-box" style="max-width:700px;">
+    <div class="modal-top">
+      <h3>📊 수익분석 (본사 전용)</h3>
+      <div class="modal-btns">
+        <button class="btn-close" onclick="document.getElementById('profit-input-modal').classList.add('open');document.getElementById('profit-modal').classList.remove('open');">⚙️ 변수 재설정</button>
+        <button class="btn-close" onclick="closeProfitModal()">닫기</button>
+      </div>
+    </div>
+    <div class="qdoc" id="profit-doc" style="padding:24px 28px;"></div>
+  </div>
+</div>
 <script>
 const WORKER_URL = "https://rent-estimator-api.hmn1234.workers.dev";
 let token = sessionStorage.getItem("lt") || null;
+let adminToken = sessionStorage.getItem("at") || null;
 let vehicles = [], selV = null, depRate = 10, CR = null;
 let pMode = "pct";
 window.onload = () => { if (token) showApp(); };
@@ -352,7 +421,7 @@ async function doLogin() {
 }
 function resetForm() {
   // 전역 상태 초기화
-  vehicles = []; selV = null; depRate = 10; CR = null; pMode = "pct";
+  vehicles = []; selV = null; depRate = 10; CR = null; pMode = "pct"; adminVars = null;
   // 차량 선택 드롭다운 초기화
   const sb = document.getElementById("s-brand");
   if (sb) sb.innerHTML = '<option value="">선택</option>';
@@ -368,7 +437,7 @@ function resetForm() {
     if (el) { el.value = ""; if (el._raw !== undefined) el._raw = ""; }
   });
   // 보증금율 → 기본 10%
-  refreshDep();
+  document.querySelectorAll(".rbtn").forEach((b,i) => b.classList.toggle("on", i === 0));
   // 선납금율 → 0%
   const ps = document.getElementById("ps");
   if (ps) ps.value = 0;
@@ -473,39 +542,18 @@ function fillDetail(v) {
   const vals = [v.차종, v.연료타입, v.배기량?(v.배기량.toLocaleString()+" cc"):"-",
     (v.적재량||0)+" kg", v.인승?(v.인승+"인승"):"-", v.차종구분||"-"];
   ids.forEach((id,i) => { const el=document.getElementById(id); el.textContent=vals[i]; el.classList.remove("empty"); });
-  refreshDep();
 }
 function clearDetail() {
   ["d-type","d-fuel","d-cc","d-load","d-seats","d-taxtype"].forEach(id => {
     const el=document.getElementById(id); el.textContent="-"; el.classList.add("empty");
   });
   selV = null;
-  refreshDep();
 }
 function updateBtn() { document.getElementById("cbtn").disabled = !selV; }
 function setDep(r, el) {
   depRate = r;
   document.querySelectorAll(".rbtn").forEach(b => b.classList.remove("on"));
   el.classList.add("on");
-}
-function effPrice() {
-  const el = document.getElementById("i-price");
-  return parseInt(((el && (el._raw || el.value)) || "").toString().replace(/,/g,"")) || (selV ? selV.기본가격 : 0) || 0;
-}
-function setDepRate(r) {
-  depRate = r;
-  document.querySelectorAll(".rbtn").forEach(b => b.classList.toggle("on", parseInt(b.textContent) === r));
-}
-// 매입가 기준: 6천만↑ 20% / 5천만↑ 15% / 그 미만 10% (해당 단계만 활성·기본)
-function depTierRate(price) {
-  if (price >= 60000000) return 20;
-  if (price >= 50000000) return 15;
-  return 10;
-}
-function refreshDep() {
-  const rate = depTierRate(effPrice());
-  document.querySelectorAll(".rbtn").forEach(b => { b.disabled = parseInt(b.textContent) !== rate; });
-  setDepRate(rate);
 }
 function getPAmount(price) { return 0; }
 function onExtraP(val) {
@@ -523,15 +571,11 @@ function onExtraP(val) {
 const W = n => { if(n===null||n===undefined) return "-"; return Math.round(Number(n)).toLocaleString("ko-KR")+"원"; };
 const N = n => { if(n===null||n===undefined) return "-"; return Math.round(Number(n)).toLocaleString("ko-KR"); };
 function s(id, v) { const el=document.getElementById(id); if(el) el.textContent=v; }
+let adminVars = null;
 
 async function doCalc() {
   if (!selV) return;
   const price = parseInt((document.getElementById("i-price")._raw || document.getElementById("i-price").value).replace(/,/g,"")) || selV.기본가격 || 0;
-  const _need = price >= 60000000 ? 20 : price >= 50000000 ? 15 : 10;
-  if (depRate < _need) {
-    alert("차량가격 기준 보증금은 최소 " + _need + "%부터 설정 가능합니다.");
-    return;
-  }
   const btn = document.getElementById("cbtn");
   btn.disabled = true; btn.textContent = "계산 중...";
   const preRate = parseInt(document.getElementById("ps").value) / 100;
@@ -544,6 +588,7 @@ async function doCalc() {
       price, depositRate: depRate/100, prepayRate: preRate, extraPRate,
       regdate: null
     };
+    if (adminVars) Object.assign(body, adminVars);
     const r = await fetch(`${WORKER_URL}/api/rent-estimate`, {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify(body)
@@ -653,7 +698,6 @@ function renderQuote() {
         <tr class="qsub"><td class="ql">보증금 (${(inp.depositRate*100).toFixed(0)}%)</td><td>${W(l.deposit48)}</td></tr>
         <tr class="qsub"><td class="ql">선납금 (${(inp.prepayRate*100).toFixed(0)}%)</td><td>${W(l.prepay48)}</td></tr>
         <tr class="qsub"><td class="ql">만기인수가</td><td>${W(l.deposit48)}</td></tr>
-        <tr class="qsub"><td class="ql" style="font-size:11px;color:#888;">↳ 안내</td><td style="font-size:11px;color:#888;">만기인수금은 납부하신 보증금으로 대체(상계)됩니다.</td></tr>
         <tr><td class="ql">공급가액</td><td>${W(l.supplyRent48)}</td></tr>
         <tr><td class="ql">부가세</td><td>${W(l.vatRent48)}</td></tr>
         <tr><td class="ql">월 대여료</td><td>${W(l.rentBase48)}</td></tr>
@@ -678,6 +722,205 @@ function fmtDate(el) {
   el.value = v;
 }
 
+// ===== 수익분석 (관리자 전용) =====
+function openProfitModal() {
+  if (!selV) { alert("차량을 먼저 선택하고 견적을 계산해주세요."); return; }
+  if (adminToken) {
+    openProfitInput();
+  } else {
+    document.getElementById("padmin-pw").value = "";
+    document.getElementById("padmin-err").textContent = "";
+    document.getElementById("padmin-modal").classList.add("open");
+  }
+}
+
+function openProfitInput() {
+  document.getElementById("profit-input-modal").classList.add("open");
+}
+
+async function doAdminLogin() {
+  const pw = document.getElementById("padmin-pw").value;
+  const err = document.getElementById("padmin-err");
+  err.textContent = "";
+  if (!pw) { err.textContent = "비밀번호를 입력하세요."; return; }
+  try {
+    const r = await fetch(`${WORKER_URL}/api/admin-login`, {
+      method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({password:pw})
+    });
+    const d = await r.json();
+    if (d.success) {
+      adminToken = d.token;
+      sessionStorage.setItem("at", adminToken);
+      document.getElementById("padmin-modal").classList.remove("open");
+      openProfitInput();
+    } else {
+      err.textContent = d.message || "비밀번호가 틀렸습니다.";
+    }
+  } catch { err.textContent = "서버 연결 실패"; }
+}
+document.getElementById("padmin-pw")?.addEventListener("keydown", e => { if(e.key==="Enter") doAdminLogin(); });
+
+function getNum(id) {
+  const el = document.getElementById(id);
+  const raw = (el._raw !== undefined ? el._raw : el.value).toString().replace(/,/g,"");
+  return raw === "" ? null : parseFloat(raw);
+}
+
+async function submitProfitInput() {
+  const rateInput      = getNum("pi-rate");
+  const agencyInput    = getNum("pi-agency");
+  const feeInput       = getNum("pi-fee");
+  const transferInput  = getNum("pi-transfer");
+  const fundRatioInput = getNum("pi-fundratio");
+  const insuranceInput = getNum("pi-insurance");
+  const salePriceInput48 = getNum("pi-saleprice48");
+  const salePriceInput60 = getNum("pi-saleprice60");
+
+  const price = parseInt((document.getElementById("i-price")._raw || document.getElementById("i-price").value).replace(/,/g,"")) || selV.기본가격 || 0;
+
+  document.getElementById("profit-input-modal").classList.remove("open");
+
+  const currentExtraPRate = 0;  // 구입형 렌트는 추가P 미사용
+  adminVars = {
+    interestRate: rateInput !== null ? rateInput/100 : null,
+    agencyRate: agencyInput !== null ? agencyInput/100 : null,
+    feeAmount: feeInput,
+    transferCost: transferInput,
+    fundRatio: fundRatioInput !== null ? fundRatioInput/100 : null,
+  };
+
+  try {
+    const r = await fetch(`${WORKER_URL}/api/profit`, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        adminToken,
+        brandCode: selV.브랜드코드, seriesCode: selV.시리즈코드, seriesName: selV.시리즈명,
+        modelCode: null, lineupCode: selV.라인업코드,
+        price, depositRate: depRate/100,
+        prepayRate: parseInt(document.getElementById("ps").value) / 100,
+        extraPRate: 0,
+        regdate: null,
+        insurance: insuranceInput || 0,
+        salePrice48: salePriceInput48 || 0,
+        salePrice60: salePriceInput60 || 0,
+        ...adminVars,
+      })
+    });
+    const d = await r.json();
+    if (!d.success) {
+      if (r.status === 401) {
+        adminToken = null; sessionStorage.removeItem("at");
+        alert("관리자 인증이 만료되었습니다. 다시 로그인해주세요.");
+        openProfitModal();
+        return;
+      }
+      alert(d.message); return;
+    }
+    renderProfit(d.result);
+    document.getElementById("profit-modal").classList.add("open");
+    // 변경된 변수로 견적도 재계산
+    if (selV) doCalc();
+  } catch(e) { alert("오류: "+e.message); }
+}
+
+function closeProfitModal() { document.getElementById("profit-modal").classList.remove("open"); }
+
+function renderProfit(r) {
+  const a = r.pf, v = r.vehicle;
+  const pct = n => (n * 100).toFixed(1) + "%";
+  document.getElementById("profit-doc").innerHTML = `
+    <div class="pf-section">
+      <div class="pf-title">차량 / 적용 변수</div>
+      <table class="pft">
+        <tr><td class="pfl">차량</td><td class="pfv" colspan="2">${v.브랜드명} ${v.시리즈명} ${v.라인업명}</td></tr>
+        <tr><td class="pfl">차량가격</td><td class="pfv" colspan="2">${W(r.input.carPrice)}</td></tr>
+        <tr><td class="pfl">보증금율 / 선납금율</td><td class="pfv" colspan="2">${(r.input.depositRate*100).toFixed(0)}% / ${(r.input.prepayRate*100).toFixed(0)}%</td></tr>
+        <tr><td class="pfl">금리 (렌트료 PMT)</td><td class="pfv" colspan="2">${(r.input.interestRate*100).toFixed(1)}%</td></tr>
+        <tr><td class="pfl">수수료</td><td class="pfv" colspan="2">${W(r.input.feeAmount)}</td></tr>
+      </table>
+    </div>
+    <div class="pf-section">
+      <div class="pf-title">수익분석 (영업용 기준)</div>
+      <table class="pft2">
+        <thead><tr><th class="pf2h">구분</th><th class="pf2h">48개월</th><th class="pf2h">60개월</th></tr></thead>
+        <tbody>
+          <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
+          <tr><td class="pfl">렌트료 수익 <span style="font-size:11px">(실납입÷1.1×기간)</span></td><td class="pfv">${W(a.렌트료수익48)}</td><td class="pfv">${W(a.렌트료수익60)}</td></tr>
+          <tr><td class="pfl">보증금(만기인수가) 수익</td><td class="pfv">${W(a.보증금수익)}</td><td class="pfv">${W(a.보증금수익)}</td></tr>
+          <tr class="pf2hl"><td class="pfl">총 수익</td><td class="pfv">${W(a.총수익48)}</td><td class="pfv">${W(a.총수익60)}</td></tr>
+
+          <tr class="pf2sec"><td colspan="3">총 비용</td></tr>
+          <tr><td class="pfl">차량원가 <span style="font-size:11px">((차량가−할인)÷1.1)</span></td><td class="pfv">${W(a.차량원가)}</td><td class="pfv">${W(a.차량원가)}</td></tr>
+          <tr><td class="pfl">취득세 <span style="font-size:11px">(영업용 4%)</span></td><td class="pfv">${W(a.취득세)}</td><td class="pfv">${W(a.취득세)}</td></tr>
+          <tr><td class="pfl">채권</td><td class="pfv">${W(a.채권)}</td><td class="pfv">${W(a.채권)}</td></tr>
+          <tr><td class="pfl">기타 부대비용 <span style="font-size:11px">(증지·번호판·등록대행 등)</span></td><td class="pfv">${W(a.부대비용)}</td><td class="pfv">${W(a.부대비용)}</td></tr>
+          <tr class="pf2hl"><td class="pfl">취득원가</td><td class="pfv">${W(a.취득원가)}</td><td class="pfv">${W(a.취득원가)}</td></tr>
+          <tr><td class="pfl">조달기준액 <span style="font-size:11px">(차량가×90%)</span></td><td class="pfv">${W(a.조달기준액)}</td><td class="pfv">${W(a.조달기준액)}</td></tr>
+          <tr><td class="pfl">할부이자 <span style="font-size:11px">(조달 7%, 원리금−원금)</span></td><td class="pfv">${W(a.할부이자48)}</td><td class="pfv">${W(a.할부이자60)}</td></tr>
+          <tr><td class="pfl">총 자동차세 <span style="font-size:11px">(영업용)</span></td><td class="pfv">${W(a.총자동차세48)}</td><td class="pfv">${W(a.총자동차세60)}</td></tr>
+          <tr><td class="pfl">총 보험료 <span style="font-size:11px">(영업용)</span></td><td class="pfv">${W(a.총보험료48)}</td><td class="pfv">${W(a.총보험료60)}</td></tr>
+          <tr><td class="pfl">총 고정비 <span style="font-size:11px">(2차탁송·블박·썬팅·검사·하이링크)</span></td><td class="pfv">${W(a.총고정비48)}</td><td class="pfv">${W(a.총고정비60)}</td></tr>
+          <tr><td class="pfl">수수료</td><td class="pfv">${W(a.수수료)}</td><td class="pfv">${W(a.수수료)}</td></tr>
+          <tr class="pf2hl"><td class="pfl">총 비용</td><td class="pfv">${W(a.총비용48)}</td><td class="pfv">${W(a.총비용60)}</td></tr>
+
+          <tr class="pf2profit"><td class="pfl">총 순수익</td><td class="pfv">${W(a.총순수익48)}</td><td class="pfv">${W(a.총순수익60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">총 순수익률</td><td class="pfv">${pct(a.총순수익률48)}</td><td class="pfv">${pct(a.총순수익률60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">연 순수익</td><td class="pfv">${W(a.연순수익48)}</td><td class="pfv">${W(a.연순수익60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">연 순수익률</td><td class="pfv">${pct(a.연순수익률48)}</td><td class="pfv">${pct(a.연순수익률60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">월 순수익</td><td class="pfv">${W(a.월순수익48)}</td><td class="pfv">${W(a.월순수익60)}</td></tr>
+          <tr class="pf2profit"><td class="pfl">월 순수익률</td><td class="pfv">${pct(a.월순수익률48)}</td><td class="pfv">${pct(a.월순수익률60)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+  window._profitResult = r;
+}
+
+function pfTab(n) {
+  document.querySelectorAll(".pf-tab").forEach((t,i) => t.classList.toggle("on", i===n));
+  document.querySelectorAll(".pf-tabcontent").forEach((t,i) => t.style.display = i===n ? "" : "none");
+}
+
+function calcBreach() {
+  const r = window._profitResult;
+  if (!r) return;
+  const period = parseInt(document.getElementById("breach-period").value);
+  const month = parseInt(document.getElementById("breach-month").value);
+  if (!month || month < 1 || month >= period) {
+    alert("중도해지 개월수를 올바르게 입력해주세요 (1 ~ " + (period-1) + ")"); return;
+  }
+
+  const b = r.breach && r.breach[String(period)] && r.breach[String(period)][month];
+  if (!b) return;
+
+  const tbody = document.getElementById("breach-tbody");
+  tbody.innerHTML = `
+    <tr class="pf2sec"><td colspan="3">위약채권</td></tr>
+    <tr><td class="pfl">납입 / 남은 개월</td><td class="pfv">${month}개월 납입</td><td class="pfv">${b.remaining}개월 남음</td></tr>
+    <tr><td class="pfl">남은 렌트료 합계</td><td class="pfv">${W(b.remainLease)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">위약채권</td><td class="pfv">${W(b.breachClaim)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">보증금 차감</td><td class="pfv">-${W(b.deposit)}</td><td class="pfv">${b.breachClaim < b.deposit ? '⚠️ 위약채권이 보증금보다 작음' : ''}</td></tr>
+    <tr class="pf2hl"><td class="pfl">실 위약채권</td><td class="pfv">${W(b.netBreachClaim)}</td><td class="pfv">${b.netBreachClaim === 0 ? '(0원 처리)' : ''}</td></tr>
+
+    <tr class="pf2sec"><td colspan="3">손실금액</td></tr>
+    <tr><td class="pfl">취득세</td><td class="pfv">${W(b.acqTaxPro)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">채권</td><td class="pfv">${W(b.bondPro)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">서비스비용</td><td class="pfv">${W(b.agencyPro)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">조달이자</td><td class="pfv">${W(b.fundIntPro)}</td><td class="pfv"></td></tr>
+    <tr class="pf2hl"><td class="pfl">총 손실금액</td><td class="pfv">${W(b.totalLoss)}</td><td class="pfv"></td></tr>
+
+    <tr class="pf2sec"><td colspan="3">이미 회수한 이익</td></tr>
+    <tr><td class="pfl">회수 이익</td><td class="pfv">+${W(b.recoveredProfit)}</td><td class="pfv"></td></tr>
+
+    <tr class="pf2sec"><td colspan="3">위약 손익 판단</td></tr>
+    <tr class="${b.isSafe ? 'pf2profit' : 'pf2danger'}">
+      <td class="pfl">최종 손익</td>
+      <td class="pfv">${W(b.netResult)}</td>
+      <td class="pfv">${b.isSafe ? '✅ 안전 (회수 가능)' : '❌ 위험 (손실 발생)'}</td>
+    </tr>
+  `;
+  document.getElementById("breach-result").style.display = "block";
+}
 </script>
 </body>
 </html>
